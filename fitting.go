@@ -14,7 +14,7 @@ func Start()  {
 
 	http.HandleFunc("/", home)
 	http.HandleFunc("/echo", echo)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":7777", nil))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +50,7 @@ window.addEventListener("load", function(evt) {
     var output = document.getElementById("output");
     var input = document.getElementById("input");
     var ws;
-    var print = function(message) {
+    var print = functiosn(message) {
         var d = document.createElement("div");
         d.innerHTML = message;
         output.appendChild(d);
