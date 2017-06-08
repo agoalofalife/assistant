@@ -5,22 +5,28 @@ import (
 	"net/http"
 	"log"
 	"html/template"
+	"github.com/rs/cors"
 )
 
 var upgrader = websocket.Upgrader{}
 
 func Start()  {
+	mux := http.NewServeMux()
+	handler := cors.AllowAll().Handler(mux)
 
-
-	http.HandleFunc("/", home)
-	http.HandleFunc("/echo", echo)
-	log.Fatal(http.ListenAndServe(":7777", nil))
+	mux.HandleFunc("/", home)
+	mux.HandleFunc("/echo", echo)
+	log.Fatal(http.ListenAndServe(":7777", handler))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
 	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
 }
 func echo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Print("upgrade:", err)
