@@ -5,24 +5,16 @@ import (
 	"net/http"
 	"log"
 	"html/template"
-	"github.com/rs/cors"
+	//"github.com/rs/cors"
 )
 
 var upgrader = websocket.Upgrader{}
 
 func Start()  {
-	c := cors.AllowAll()
-
-	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-	})
-
-
 	http.HandleFunc("/", home)
 	http.HandleFunc("/echo", echo)
 
-
-	log.Fatal(http.ListenAndServe(":7777", c.Handler(handler)))
+	log.Fatal(http.ListenAndServe(":7777", nil))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -31,9 +23,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 func echo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Requested-With,Origin, Content-Length, Accept-Encoding, X-CSRF-Token,  Accept")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Requested-With,Origin, Content-Length, Accept-Encoding, X-CSRF-Token,  Accept, Authorization")
 
+	r.Header.Set("Origin", "http://localhost:7777")
 	c, err := upgrader.Upgrade(w, r, nil)
+
 	if err != nil {
 		log.Print("upgrade:", err)
 		return
