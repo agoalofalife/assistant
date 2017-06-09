@@ -11,8 +11,9 @@ import (
 var upgrader = websocket.Upgrader{}
 
 func Start()  {
-	http.HandleFunc("/", home)
-	http.HandleFunc("/echo", echo)
+	//http.HandleFunc("/", home)
+	http.HandleFunc("/", echo)
+	//http.HandleFunc("/echo", echo)
 
 	log.Fatal(http.ListenAndServe(":7777", nil))
 }
@@ -21,7 +22,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	homeTemplate.Execute(w, "ws://"+r.Host+"/echo")
 }
 func echo(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allowx-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Requested-With,Origin, Content-Length, Accept-Encoding, X-CSRF-Token,  Accept, Authorization")
 
