@@ -11,12 +11,18 @@ import (
 var upgrader = websocket.Upgrader{}
 
 func Start()  {
-	mux := http.NewServeMux()
-	handler := cors.AllowAll().Handler(mux)
+	c := cors.AllowAll()
 
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/echo", echo)
-	log.Fatal(http.ListenAndServe(":7777", handler))
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+	})
+
+
+	http.HandleFunc("/", home)
+	http.HandleFunc("/echo", echo)
+
+
+	log.Fatal(http.ListenAndServe(":7777", c.Handler(handler)))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +31,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 func echo(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, X-Requested-With,Origin, Content-Length, Accept-Encoding, X-CSRF-Token,  Accept")
 
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

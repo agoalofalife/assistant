@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h2>Essential Links</h2>
+    <h2 @click="start">Essential Links</h2>
   </div>
 </template>
 
@@ -12,12 +12,42 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
-    mounted() {
-//      console.log( this.$socket );
-        this.$socket.on('connect', function(){
-            console.log(socket.id); // 'G5p5...'
-        });
-//        this.$socket.emit('hello');
+    methods: {
+      start () {
+          console.log(this.$socket.emit('hello'));
+      }
+    },
+    socket: {
+        // Prefix for event names
+        // prefix: "/counter/",
+
+        // If you set `namespace`, it will create a new socket connection to the namespace instead of `/`
+        // namespace: "/counter",
+
+        events: {
+
+            // Similar as this.$socket.on("changed", (msg) => { ... });
+            // If you set `prefix` to `/counter/`, the event name will be `/counter/changed`
+            //
+            changed(msg) {
+                console.log("Something changed: " + msg);
+            },
+
+
+           connect() {
+           console.log("Websocket connected to " + this.$socket.nsp);
+           },
+
+           disconnect() {
+           console.log("Websocket disconnected from " + this.$socket.nsp);
+           },
+
+           error(err) {
+           console.error("Websocket error!", err);
+           }
+
+
+        }
     }
 }
 </script>

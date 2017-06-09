@@ -5,8 +5,10 @@ import App from './App'
 import router from './router'
 import VueWebsocket from "vue-websocket";
 
-Vue.use(VueWebsocket, "ws://localhost:7777/echo", {
-    reconnection: false
+Vue.use(VueWebsocket, "http://localhost:7777/echo", {
+// Vue.use(VueWebsocket, "ws://localhost:7777/echo", {
+//     path: '/echo',
+    transports: ['websocket']
 });
 
 Vue.config.productionTip = false
