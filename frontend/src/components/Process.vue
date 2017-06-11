@@ -9,16 +9,13 @@
       <!--</el-switch>-->
 
       <el-table  v-show="ready" :data="processes" style="width: 100%">
-        <el-table-column prop="PID" header-align="center" label="PID" width="90"></el-table-column>
+        <el-table-column sortable prop="PID" header-align="center" label="PID" width="90"></el-table-column>
         <el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>
-        <el-table-column prop="TIME" header-align="center" label="TIME" width="90"></el-table-column>
+        <el-table-column sortable prop="TIME" header-align="center" label="TIME" width="100"></el-table-column>
         <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
       </el-table>
     </el-col>
   </el-col>
-
-
-
 </template>
 
 <script>
@@ -41,6 +38,7 @@ export default {
         events: {
             listProcess(msg) {
                 this.processes = JSON.parse(msg)
+                console.log( 'add' );
                 this.ready = true
 
             },
