@@ -6,22 +6,35 @@ import (
 	"github.com/assistant/helpers"
 	"strconv"
 	"strings"
+	"encoding/json"
+	"log"
 )
 
 
 type Processing interface {
 	allPs() bool
 }
+
+type Convert interface {
+	toJson() string
+}
+type containerProcess struct{
+	listCurrentProcesses []Process
+}
 type Process struct {
-	PID int
-	PPID int
-	TIME string
-	CMD string
-	TTY string
+	PID int `json:"PID"`
+	PPID int `json:"PPID"`
+	TIME string `json:"TIME"`
+	CMD string `json:"CMD"`
+	TTY string `json:"TTY"`
+	containerProcess
 }
 
+func New() *Process {
+	return &Process{}
+}
 // list all process
-func allPs() []Process {
+func (process *Process) allPs() []Process {
 	cmd ,_:= exec.Command("ps").Output()
 
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+)")
@@ -39,5 +52,14 @@ func allPs() []Process {
 		pid ,_:= strconv.Atoi(strings.TrimSpace(listPid[i]))
 		processList[i] = Process{PID:pid, TIME:listTimes[i], CMD:listPaths[i],TTY:listTerminal[i]}
 	}
+	process.containerProcess.listCurrentProcesses = processList
 	return processList
+}
+
+func (container containerProcess)  toJson () ([]byte){
+	by, err := json.Marshal(container.listCurrentProcesses)
+	if err !=nil {
+		log.Println(err)
+	}
+	return by
 }
