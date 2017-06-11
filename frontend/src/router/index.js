@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Head from '@/components/Head'
+import Process from '@/components/Process'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Head',
-      component: Head
+      path: '/process',
+      name: 'Process',
+      component: Process
     }
   ]
 })

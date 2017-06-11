@@ -1,11 +1,24 @@
 <template>
 
-  <el-table  v-show="ready" :data="processes" style="width: 100%">
-    <el-table-column prop="PID" header-align="center" label="PID" width="90"></el-table-column>
-    <el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>
-    <el-table-column prop="TIME" header-align="center" label="TIME" width="90"></el-table-column>
-    <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
-  </el-table>
+  <el-col :span="24" >
+    <el-col :span="18" class="process">
+      <!--<el-switch-->
+      <!--v-model="switchUser"-->
+      <!--on-color="#13ce66"-->
+      <!--off-color="#ff4949">-->
+      <!--</el-switch>-->
+
+      <el-table  v-show="ready" :data="processes" style="width: 100%">
+        <el-table-column prop="PID" header-align="center" label="PID" width="90"></el-table-column>
+        <el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>
+        <el-table-column prop="TIME" header-align="center" label="TIME" width="90"></el-table-column>
+        <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
+      </el-table>
+    </el-col>
+  </el-col>
+
+
+
 </template>
 
 <script>
@@ -14,7 +27,9 @@ export default {
     data() {
         return {
             ready:false,
-            processes: []
+            processes: [],
+
+            switchUser : true
         }
     },
     methods: {
@@ -45,6 +60,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .process{
+    margin: 1% 0;
+  }
 h1, h2 {
   font-weight: normal;
 }
