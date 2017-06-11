@@ -1,4 +1,5 @@
 <template>
+
   <div class="hello">
     <h2 @click="start">Essential Links</h2>
   </div>
@@ -14,39 +15,24 @@ export default {
   },
     methods: {
       start () {
-          console.log(this.$socket.emit('hello'));
+          console.log(this.$socket.emit('chat message'));
       }
     },
     socket: {
-        // Prefix for event names
-        // prefix: "/counter/",
-
-        // If you set `namespace`, it will create a new socket connection to the namespace instead of `/`
-        // namespace: "/counter",
-
         events: {
-
-            // Similar as this.$socket.on("changed", (msg) => { ... });
-            // If you set `prefix` to `/counter/`, the event name will be `/counter/changed`
-            //
-            changed(msg) {
-                console.log("Something changed: " + msg);
+            listProcess(msg) {
+                console.log("listProcess: " + msg);
+                console.log(  JSON.parse(msg) );
             },
-
-
            connect() {
-           console.log("Websocket connected to " + this.$socket.nsp);
+           console.info("Websocket connected to " + this.$socket.nsp);
            },
-
            disconnect() {
            console.log("Websocket disconnected from " + this.$socket.nsp);
            },
-
            error(err) {
            console.error("Websocket error!", err);
            }
-
-
         }
     }
 }
