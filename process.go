@@ -47,8 +47,8 @@ func (process *Process) allPs() []Process {
 	listTimes := regexTime.FindAllString(string(cmd), -1)
 	listPaths := helpers.GroupExclude(regexPath.FindAllStringSubmatch(string(cmd), -1))
 
-	processList := make([]Process, len(listPid) + 1)
-	for i := 0; i <= len(listPid) -  1; i++{
+	processList := make([]Process, len(listPid))
+	for i := 0; i <= len(listPid) - 1; i++{
 		pid ,_:= strconv.Atoi(strings.TrimSpace(listPid[i]))
 		processList[i] = Process{PID:pid, TIME:listTimes[i], CMD:listPaths[i],TTY:listTerminal[i]}
 	}

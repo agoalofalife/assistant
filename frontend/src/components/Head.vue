@@ -1,18 +1,22 @@
 <template>
 
-  <div class="hello">
-    <h2 @click="start">Essential Links</h2>
-  </div>
+  <el-table  v-show="ready" :data="processes" style="width: 100%">
+    <el-table-column prop="PID" label="PID" width="90"></el-table-column>
+    <el-table-column prop="TTY" label="TTY" width="90"></el-table-column>
+    <el-table-column prop="TIME" label="TIME" width="90"></el-table-column>
+    <el-table-column prop="CMD" label="CMD" ></el-table-column>
+  </el-table>
 </template>
 
 <script>
 export default {
   name: 'hello',
-  data () {
-    return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  },
+    data() {
+        return {
+            ready:false,
+            processes: []
+        }
+    },
     methods: {
       start () {
           console.log(this.$socket.emit('chat message'));
@@ -21,8 +25,9 @@ export default {
     socket: {
         events: {
             listProcess(msg) {
-                console.log("listProcess: " + msg);
-                console.log(  JSON.parse(msg) );
+                this.processes = JSON.parse(msg)
+                this.ready = true
+
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);

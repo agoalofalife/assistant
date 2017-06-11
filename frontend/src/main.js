@@ -4,10 +4,14 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueWebsocket from "vue-websocket";
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-default/index.css'
 
 Vue.use(VueWebsocket, "ws://localhost:7777", {
     transports: ['websocket']
 });
+Vue.use(ElementUI)
+
 
 Vue.config.productionTip = false
 
