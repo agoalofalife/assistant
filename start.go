@@ -16,7 +16,6 @@ func Go() {
 	ps := New()
 	ps.allPs()
 
-
 	server.On("connection", func(so socketio.Socket) {
 		log.Println("on connection")
 		so.Emit("listProcess", string(ps.toJson()))

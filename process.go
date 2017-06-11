@@ -8,6 +8,7 @@ import (
 	"strings"
 	"encoding/json"
 	"log"
+
 )
 
 
@@ -35,15 +36,15 @@ func New() *Process {
 }
 // list all process
 func (process *Process) allPs() []Process {
-	cmd ,_:= exec.Command("ps").Output()
+	cmd ,_:= exec.Command("ps","-x").Output()
 
-	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+)")
-	regexPid := regexp.MustCompile("\\s[0-9]+\\s")
-	regexTime := regexp.MustCompile("[0-9]{1,2}:[0-9]{1,2}\\.[0-9]{1,2}")
-	regexPath := regexp.MustCompile("[0-9]{1,2}:[0-9]{1,2}\\.[0-9]{1,2}\\s+(.+)")
+	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
+	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
+	regexTime := regexp.MustCompile("[0-9]+:[0-9]+\\.[0-9]+")
+	regexPath := regexp.MustCompile("[0-9]+:[0-9]+\\.[0-9]+\\s+(.+)")
 
 	listTerminal := helpers.GroupExclude(regexTerminal.FindAllStringSubmatch(string(cmd), -1))
-	listPid := regexPid.FindAllString(string(cmd), -1)
+	listPid := helpers.GroupExclude(regexPid.FindAllStringSubmatch(string(cmd), -1))
 	listTimes := regexTime.FindAllString(string(cmd), -1)
 	listPaths := helpers.GroupExclude(regexPath.FindAllStringSubmatch(string(cmd), -1))
 
@@ -52,6 +53,7 @@ func (process *Process) allPs() []Process {
 		pid ,_:= strconv.Atoi(strings.TrimSpace(listPid[i]))
 		processList[i] = Process{PID:pid, TIME:listTimes[i], CMD:listPaths[i],TTY:listTerminal[i]}
 	}
+
 	process.containerProcess.listCurrentProcesses = processList
 	return processList
 }
