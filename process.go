@@ -24,8 +24,19 @@ type containerProcess struct{
 	listCurrentProcesses []Process
 }
 type Process struct {
+	UUD int `json:"UID"`
 	PID int `json:"PID"`
 	PPID int `json:"PPID"`
+	F int `json:"F"`
+	CPU string `json:"CPU"`
+	PRI int `json:"PRI"`
+	NI int `json:"NI"`
+	SZ int `json:"SZ"`
+	RSS int `json:"RSS"`
+	WCHAN string `json:"WCHAN"`
+	S string `json:"S"`
+	ADDR int `json:"ADDR"`
+	STIME string `json:"STIME"`
 	TIME string `json:"TIME"`
 	CMD string `json:"CMD"`
 	TTY string `json:"TTY"`
@@ -38,7 +49,9 @@ func New() *Process {
 // list all process
 func (process *Process) allPs() []Process {
 	cmd ,_:= exec.Command("ps","-lf").Output()
-	log.Println(strings.Split(string(cmd), "\n")[0])
+
+	titleString := strings.Split(string(cmd), "\n")[0]
+	log.Println(strings.Split(titleString, "\t"))
 	os.Exit(2)
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
 	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
