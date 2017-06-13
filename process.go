@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"log"
 
+	"os"
 )
 
 
@@ -36,8 +37,9 @@ func New() *Process {
 }
 // list all process
 func (process *Process) allPs() []Process {
-	cmd ,_:= exec.Command("ps","-A").Output()
-
+	cmd ,_:= exec.Command("ps","-lf").Output()
+	log.Println(strings.Split(string(cmd), "\n")[0])
+	os.Exit(2)
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
 	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
 	regexTime := regexp.MustCompile("[0-9]+:[0-9]+\\.[0-9]+")
