@@ -5,6 +5,7 @@
         <el-submenu index="1">
           <template slot="title">General</template>
           <el-menu-item index="process">Process</el-menu-item>
+          <el-menu-item index="process">Setting</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>

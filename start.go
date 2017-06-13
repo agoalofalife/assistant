@@ -25,7 +25,6 @@ func Go() {
 				ps := New()
 				ps.allPs()
 				so.Emit("listProcess", string(ps.toJson()))
-				fmt.Println("test goroutine")
 				time.Sleep(10 * time.Second)
 			}
 

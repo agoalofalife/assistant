@@ -36,7 +36,7 @@ func New() *Process {
 }
 // list all process
 func (process *Process) allPs() []Process {
-	cmd ,_:= exec.Command("ps","-x").Output()
+	cmd ,_:= exec.Command("ps","-A").Output()
 
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
 	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
