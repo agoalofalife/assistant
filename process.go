@@ -51,7 +51,10 @@ func (process *Process) allPs() []Process {
 	cmd ,_:= exec.Command("ps","-lf").Output()
 
 	titleString := strings.Split(string(cmd), "\n")[0]
-	log.Println(strings.Split(titleString, "\t"))
+	//log.Println(strings.Fields(titleString))
+	for _,nameFields := range strings.Fields(titleString) {
+		log.Println(nameFields)
+	}
 	os.Exit(2)
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
 	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
