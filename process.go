@@ -49,12 +49,31 @@ func New() *Process {
 // list all process
 func (process *Process) allPs() []Process {
 	cmd ,_:= exec.Command("ps","-lf").Output()
+	mapProcesses := make(map[string]interface{})
 
-	titleString := strings.Split(string(cmd), "\n")[0]
-	//log.Println(strings.Fields(titleString))
-	for _,nameFields := range strings.Fields(titleString) {
-		log.Println(nameFields)
+	// split all rows
+	rows := strings.Split(string(cmd), "\n")
+	//processes:= make([]Process, len(rows) -1 )
+	titleString := strings.Fields(rows[0])
+
+	// split title
+	//for _,nameFields := range strings.Fields(titleString) {
+	//	log.Println(nameFields)
+	//	for _,rowValue := range rows[1:]{
+	//		log.Println(rowValue)
+	//	}
+	//}
+
+	for _, rowValue := range rows[1:]{
+		log.Println(rows[1:])
+		os.Exit(2)
+		for index, attributeProcess := range strings.Fields(string(rowValue)) {
+
+			mapProcesses[titleString[index]] = attributeProcess
+		}
+		//processes[index] = Process{}
 	}
+	log.Println(mapProcesses)
 	os.Exit(2)
 	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
 	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
