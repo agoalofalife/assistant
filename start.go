@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-
+	"time"
 )
 
 func Go() {
@@ -14,20 +14,20 @@ func Go() {
 		log.Fatal(err)
 	}
 
-	                ps := New()
-			ps.allPs()
+			//ps := New()
+			//ps.allPs()
 
 	server.On("connection", func(so socketio.Socket) {
 		log.Println("on connection")
-		//go func() {
-		//	for {
-		//		ps := New()
-		//		ps.allPs()
-				//so.Emit("listProcess", string(ps.toJson()))
-				//time.Sleep(10 * time.Second)
-			//}
+		go func() {
+			for {
+				ps := New()
+				ps.allPs()
+				so.Emit("listProcess", string(ps.toJson()))
+				time.Sleep(10 * time.Second)
+			}
 
-		//}()
+		}()
 
 	})
 	server.On("error", func(so socketio.Socket, err error) {

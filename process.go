@@ -6,7 +6,6 @@ import (
 	"os/exec"
 	"strings"
 	"strconv"
-	"os"
 )
 
 type Processing interface {
@@ -56,7 +55,7 @@ func (process *Process) allPs() []Process {
 	// the idea is that the string COMMAND can have gaps > 0 and
 	// and we leave it to the end
 
-	for indexRow, rowValue := range rows[1:] {
+	for indexRow, rowValue := range rows[1:len(rows) - 1] {
 		for index, attributeProcess := range strings.Fields(string(rowValue)) {
 			if index >= len(titleString) {
 				middleProcess[titleString[len(titleString)-1]] = middleProcess[titleString[len(titleString)-1]].(string) + " " + attributeProcess
@@ -67,19 +66,11 @@ func (process *Process) allPs() []Process {
 		mapProcesses[indexRow] = middleProcess
 		middleProcess = make(map[string]interface{})
 	}
-		log.Println(len(rows[1:]))
-		os.Exit(2)
+
 	processList := make([]Process, len(mapProcesses) )
 
-
 	for i := 0; i <= len(mapProcesses) - 1; i++ {
-		log.Println(mapProcesses[i]["PID"])
-		pid, err   := strconv.Atoi(strings.TrimSpace(mapProcesses[i]["PID"].(string)))
-		if err != nil {
-			log.Println(err)
-			//log.Println(mapProcesses[i]["PID"].(string))
-			os.Exit(2)
-		}
+		pid, _  := strconv.Atoi(strings.TrimSpace(mapProcesses[i]["PID"].(string)))
 		uid,_   := strconv.Atoi(mapProcesses[i]["UID"].(string))
 		ppid,_  := strconv.Atoi(mapProcesses[i]["PPID"].(string))
 		f,_     := strconv.Atoi(mapProcesses[i]["F"].(string))
