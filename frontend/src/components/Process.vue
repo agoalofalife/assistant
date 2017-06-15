@@ -35,6 +35,7 @@ export default {
         events: {
             listProcess(msg) {
                 this.processes = JSON.parse(msg)
+                console.log( this.processes );
                 console.log( 'add' );
                 this.ready = true
 

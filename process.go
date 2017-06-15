@@ -1,16 +1,13 @@
 package assistant
 
 import (
-	"os/exec"
-	"regexp"
-	"github.com/agoalofalife/assistant/helpers"
-	"strconv"
-	"strings"
 	"encoding/json"
 	"log"
+	"os/exec"
+	"strings"
+	"strconv"
 	"os"
 )
-
 
 type Processing interface {
 	allPs() bool
@@ -19,33 +16,34 @@ type Processing interface {
 type Convert interface {
 	toJson() string
 }
-type containerProcess struct{
+type containerProcess struct {
 	listCurrentProcesses []Process
 }
 type Process struct {
-	UUD int `json:"UID"`
-	PID int `json:"PID"`
-	PPID int `json:"PPID"`
-	F int `json:"F"`
-	CPU string `json:"CPU"`
-	PRI int `json:"PRI"`
-	NI int `json:"NI"`
-	RSS int `json:"RSS"`
+	UID   int    `json:"UID"`
+	PID   int    `json:"PID"`
+	PPID  int    `json:"PPID"`
+	F     int    `json:"F"`
+	CPU   string `json:"CPU"`
+	USER  string `json:"USER"`
+	NI    int    `json:"NI"`
+	RSS   int    `json:"RSS"`
 	WCHAN string `json:"WCHAN"`
-	STAT string `json:"S"`
+	STAT  string `json:"S"`
 	STIME string `json:"STIME"`
-	TIME string `json:"TIME"`
-	CMD string `json:"CMD"`
-	TTY string `json:"TTY"`
+	TIME  string `json:"TIME"`
+	CMD   string `json:"CMD"`
+	TTY   string `json:"TTY"`
 	containerProcess
 }
 
 func New() *Process {
 	return &Process{}
 }
+
 // list all process
 func (process *Process) allPs() []Process {
-	cmd ,_:= exec.Command("ps","o", "uid,pid,ppid,cpu,ni,f,stime,tty,rss,wchan,time,stat,user,command").Output()
+	cmd, _ := exec.Command("ps", "o", "uid,pid,ppid,cpu,ni,f,stime,tty,rss,wchan,time,stat,user,command").Output()
 	mapProcesses := make(map[int]map[string]interface{})
 	middleProcess := make(map[string]interface{})
 
@@ -57,41 +55,52 @@ func (process *Process) allPs() []Process {
 
 	// the idea is that the string COMMAND can have gaps > 0 and
 	// and we leave it to the end
-	for indexRow, rowValue := range rows[1:]{
+
+	for indexRow, rowValue := range rows[1:] {
 		for index, attributeProcess := range strings.Fields(string(rowValue)) {
 			if index >= len(titleString) {
-				middleProcess[titleString[len(titleString) - 1]] = middleProcess[titleString[len(titleString) - 1]].(string) + " " + attributeProcess
-			} else{
+				middleProcess[titleString[len(titleString)-1]] = middleProcess[titleString[len(titleString)-1]].(string) + " " + attributeProcess
+			} else {
 				middleProcess[titleString[index]] = attributeProcess
 			}
 		}
 		mapProcesses[indexRow] = middleProcess
+		middleProcess = make(map[string]interface{})
 	}
-	log.Println(mapProcesses[1])
-	os.Exit(2)
-	regexTerminal := regexp.MustCompile("\\s[0-9]+\\s([A-z0-9]+|.+)\\s[0-9]+:[0-9]+\\.[0-9]+")
-	regexPid := regexp.MustCompile("([0-9]+)\\s.+")
-	regexTime := regexp.MustCompile("[0-9]+:[0-9]+\\.[0-9]+")
-	regexPath := regexp.MustCompile("[0-9]+:[0-9]+\\.[0-9]+\\s+(.+)")
+		log.Println(len(rows[1:]))
+		os.Exit(2)
+	processList := make([]Process, len(mapProcesses) )
 
-	listTerminal := helpers.GroupExclude(regexTerminal.FindAllStringSubmatch(string(cmd), -1))
-	listPid := helpers.GroupExclude(regexPid.FindAllStringSubmatch(string(cmd), -1))
-	listTimes := regexTime.FindAllString(string(cmd), -1)
-	listPaths := helpers.GroupExclude(regexPath.FindAllStringSubmatch(string(cmd), -1))
 
-	processList := make([]Process, len(listPid))
-	for i := 0; i <= len(listPid) - 1; i++{
-		pid ,_:= strconv.Atoi(strings.TrimSpace(listPid[i]))
-		processList[i] = Process{PID:pid, TIME:listTimes[i], CMD:listPaths[i],TTY:listTerminal[i]}
+	for i := 0; i <= len(mapProcesses) - 1; i++ {
+		log.Println(mapProcesses[i]["PID"])
+		pid, err   := strconv.Atoi(strings.TrimSpace(mapProcesses[i]["PID"].(string)))
+		if err != nil {
+			log.Println(err)
+			//log.Println(mapProcesses[i]["PID"].(string))
+			os.Exit(2)
+		}
+		uid,_   := strconv.Atoi(mapProcesses[i]["UID"].(string))
+		ppid,_  := strconv.Atoi(mapProcesses[i]["PPID"].(string))
+		f,_     := strconv.Atoi(mapProcesses[i]["F"].(string))
+		ni,_    := strconv.Atoi(mapProcesses[i]["NI"].(string))
+		rss,_   := strconv.Atoi(mapProcesses[i]["RSS"].(string))
+
+
+		processList[i] = Process{PID: pid, TIME: mapProcesses[i]["TIME"].(string),
+			CMD: mapProcesses[i]["COMMAND"].(string), TTY: mapProcesses[i]["TTY"].(string),
+			UID:uid,PPID:ppid, F:f, CPU:mapProcesses[i]["CPU"].(string),USER:mapProcesses[i]["USER"].(string),
+			NI:ni, RSS:rss, WCHAN:mapProcesses[i]["WCHAN"].(string), STAT:mapProcesses[i]["STAT"].(string),
+			STIME:mapProcesses[i]["STIME"].(string)}
 	}
 
 	process.containerProcess.listCurrentProcesses = processList
 	return processList
 }
 
-func (container containerProcess)  toJson () ([]byte){
+func (container containerProcess) toJson() []byte {
 	by, err := json.Marshal(container.listCurrentProcesses)
-	if err !=nil {
+	if err != nil {
 		log.Println(err)
 	}
 	return by
