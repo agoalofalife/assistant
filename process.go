@@ -8,7 +8,6 @@ import (
 	"strings"
 	"encoding/json"
 	"log"
-
 	"os"
 )
 
@@ -31,11 +30,9 @@ type Process struct {
 	CPU string `json:"CPU"`
 	PRI int `json:"PRI"`
 	NI int `json:"NI"`
-	SZ int `json:"SZ"`
 	RSS int `json:"RSS"`
 	WCHAN string `json:"WCHAN"`
-	S string `json:"S"`
-	ADDR int `json:"ADDR"`
+	STAT string `json:"S"`
 	STIME string `json:"STIME"`
 	TIME string `json:"TIME"`
 	CMD string `json:"CMD"`
@@ -48,7 +45,7 @@ func New() *Process {
 }
 // list all process
 func (process *Process) allPs() []Process {
-	cmd ,_:= exec.Command("ps","o", "uid,pid,ppid,f,c,stime,tty,rss,wchan,addr,time,stat,user,command").Output()
+	cmd ,_:= exec.Command("ps","o", "uid,pid,ppid,cpu,ni,f,stime,tty,rss,wchan,time,stat,user,command").Output()
 	mapProcesses := make(map[int]map[string]interface{})
 	middleProcess := make(map[string]interface{})
 
@@ -57,7 +54,6 @@ func (process *Process) allPs() []Process {
 
 	//processes:= make([]Process, len(rows) -1 )
 	titleString := strings.Fields(rows[0])
-
 
 	// the idea is that the string COMMAND can have gaps > 0 and
 	// and we leave it to the end
