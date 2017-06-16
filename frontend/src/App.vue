@@ -36,6 +36,12 @@ export default {
 </script>
 
 <style>
+  .el-icon-close{
+    position: absolute;
+    top: 35%;
+    right: 83%;
+  }
+
   .icon-menu{
     font-size: 25px;
   }
