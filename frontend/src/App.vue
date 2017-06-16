@@ -39,7 +39,7 @@ export default {
   .el-icon-close{
     position: absolute;
     top: 35%;
-    right: 83%;
+    right: 80%;
   }
 
   .icon-menu{
