@@ -8,6 +8,7 @@
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
       <el-table  v-show="ready" :data="processes" style="width: 100%">
+
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
         <el-table-column sortable  prop="F" header-align="center" label="F" width="90"></el-table-column>
@@ -21,9 +22,12 @@
         <el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>
         <el-table-column sortable prop="TIME" header-align="center" label="TIME" width="100"></el-table-column>
         <el-table-column sortable prop="STIME" header-align="center" label="STIME" width="100"></el-table-column>
-        <el-table-column prop="USER" header-align="center" label="USER" width="100"></el-table-column>
+        <el-table-column prop="USER" header-align="center" label="USER"
+                         :filters="listUsers"
+                         :filter-method="filterUser"
+                         filter-placement="bottom-end"width="100"></el-table-column>
         <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
-        <el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="90"></el-table-column>
+        <el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="120"></el-table-column>
       </el-table>
     </el-col>
 </template>
@@ -35,14 +39,31 @@ export default {
         return {
             ready:false,
             processes: [],
-
             switchUser : true
         }
     },
     methods: {
       start () {
           console.log(this.$socket.emit('chat message'));
+      },
+      filterUser(value, row) {
+          return row.USER === value;
       }
+    },
+    computed:{
+        listUsers(){
+            let resultCompare = []
+            let result        = []
+            this.processes.forEach((el) => {
+
+                if (!result.includes(el.USER)) {
+                    result.push( el.USER)
+                    resultCompare.push({ text: el.USER, value: el.USER })
+                }
+            });
+
+            return resultCompare
+        }
     },
     socket: {
         events: {
