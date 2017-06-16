@@ -1,5 +1,5 @@
 <template>
-
+<div>
     <el-col :span="20" class="process">
       <!--<el-switch-->
       <!--v-model="switchUser"-->
@@ -7,7 +7,7 @@
       <!--off-color="#ff4949">-->
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="900" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table   height="500" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
 
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
@@ -41,6 +41,17 @@
         </el-table-column>
       </el-table>
     </el-col>
+  <el-col :span="22">
+  <div class="block">
+    <span class="demonstration">Total item count</span>
+    <el-pagination
+            :page-size="100"
+            layout="total, prev, pager, next"
+            :total="1000">
+    </el-pagination>
+  </div>
+  </el-col>
+</div>
 </template>
 
 <script>
