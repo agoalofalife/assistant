@@ -7,7 +7,7 @@
       <!--off-color="#ff4949">-->
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="900" v-show="ready" :data="processes" style="width: 100%" @filter-change="testNewFunctional">
+      <el-table   height="900" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
 
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
@@ -50,19 +50,28 @@ export default {
         return {
             ready:false,
             processes: [],
-            switchUser : true
+            switchUser : true,
+            selectUser:[]
         }
     },
     methods: {
-      testNewFunctional (e,r) {console.log('trigger', e,r)},
-
+      testNewFunctional (e,r) {},
+      selectingUser(arr){
+          this.selectUser  = Object.values(arr)[0]
+       },
+      passThroughFilter(){
+        if (this.selectUser.length > 0 ){
+            this.processes = this.processes.filter(function (ps) {
+               return  this.selectUser.indexOf(ps.USER) !== -1
+            }.bind(this))
+        }
+      },
       // push emit kill process from list
       killPs(row) {
           this.$socket.emit('kill:ps', row.PID, function(data){
               console.log('ACK from server wtih data: ', data)
           })
       },
-
       filterUser(value, row) {
           return row.USER === value;
       }
@@ -84,9 +93,8 @@ export default {
     socket: {
         events: {
             listProcess(msg) {
-                console.log(                this.processes.length )
                 this.processes = JSON.parse(msg)
-
+                this.passThroughFilter()
                 this.ready = true
 
             },
