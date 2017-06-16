@@ -7,7 +7,7 @@
       <!--off-color="#ff4949">-->
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="900" v-show="ready" :data="processes" style="width: 100%">
+      <el-table   height="900" v-show="ready" :data="processes" style="width: 100%" @filter-change="testNewFunctional">
 
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
@@ -25,8 +25,9 @@
         <el-table-column prop="USER" header-align="center" label="USER"
                          :filters="listUsers"
                          :filter-method="filterUser"
-                         filter-placement="bottom-end"
-                         width="100"></el-table-column>
+                          filter-placement="bottom-end"
+                          width="100">
+        </el-table-column>
         <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
         <el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="120"></el-table-column>
         <el-table-column fixed="right"
@@ -53,7 +54,7 @@ export default {
         }
     },
     methods: {
-      testNewFunctional (e) {console.log('trigger', e)},
+      testNewFunctional (e,r) {console.log('trigger', e,r)},
 
       // push emit kill process from list
       killPs(row) {

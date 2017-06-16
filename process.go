@@ -48,13 +48,10 @@ func (process *Process) allPs() []Process {
 
 	// split all rows
 	rows := strings.Split(string(cmd), "\n")
-
-	//processes:= make([]Process, len(rows) -1 )
 	titleString := strings.Fields(rows[0])
 
 	// the idea is that the string COMMAND can have gaps > 0 and
 	// and we leave it to the end
-
 	for indexRow, rowValue := range rows[1:len(rows) - 1] {
 		for index, attributeProcess := range strings.Fields(string(rowValue)) {
 			if index >= len(titleString) {
