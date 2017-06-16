@@ -28,6 +28,15 @@
                          filter-placement="bottom-end"width="100"></el-table-column>
         <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
         <el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="120"></el-table-column>
+        <el-table-column fixed="right"
+                label="Operations">
+          <template scope="scope">
+            <el-button
+                    size="small"
+                    type="danger"
+                    @click="killPs(scope.row)">Kill</el-button>
+          </template>
+        </el-table-column>
       </el-table>
     </el-col>
 </template>
@@ -43,9 +52,15 @@ export default {
         }
     },
     methods: {
-      start () {
-          console.log(this.$socket.emit('chat message'));
+      testNewFunctional () {},
+
+      // push emit kill process from list
+      killPs(row) {
+          this.$socket.emit('kill:ps', row.PID, function(data){
+              console.log('ACK from server wtih data: ', data)
+          })
       },
+
       filterUser(value, row) {
           return row.USER === value;
       }
@@ -61,7 +76,6 @@ export default {
                     resultCompare.push({ text: el.USER, value: el.USER })
                 }
             });
-
             return resultCompare
         }
     },

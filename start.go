@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"time"
+	"os"
 )
 
 func Go() {
@@ -16,6 +17,13 @@ func Go() {
 
 			//ps := New()
 			//ps.allPs()
+
+	// kill process
+	server.On(KILL_PS, func(pid int) bool {
+		process,_ := os.FindProcess(pid)
+		process.Kill()
+		return true
+	})
 
 	server.On("connection", func(so socketio.Socket) {
 		log.Println("on connection")
