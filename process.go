@@ -42,7 +42,7 @@ func New() *Process {
 
 // list all process
 func (process *Process) allPs() []Process {
-	cmd, _ := exec.Command("ps", "o", "uid,pid,ppid,cpu,ni,f,stime,tty,rss,wchan,time,stat,user,command").Output()
+	cmd, _ := exec.Command("ps", "o", "uid,pid,ppid,cpu,ni,f,stime,tty,rss,wchan,time,stat,user,command", "-A").Output()
 	mapProcesses := make(map[int]map[string]interface{})
 	middleProcess := make(map[string]interface{})
 
