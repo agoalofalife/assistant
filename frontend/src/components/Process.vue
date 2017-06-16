@@ -28,7 +28,7 @@
     </el-col>
 </template>
 
-<script>git
+<script>
 export default {
   name: 'hello',
     data() {

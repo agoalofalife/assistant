@@ -76,10 +76,15 @@ func (process *Process) allPs() []Process {
 		f,_     := strconv.Atoi(mapProcesses[i]["F"].(string))
 		ni,_    := strconv.Atoi(mapProcesses[i]["NI"].(string))
 		rss,_   := strconv.Atoi(mapProcesses[i]["RSS"].(string))
-
+		var tty string
+		if mapProcesses[i]["TTY"] == nil {
+			tty = mapProcesses[i]["TT"].(string)
+		} else{
+			tty = mapProcesses[i]["TTY"].(string)
+		}
 
 		processList[i] = Process{PID: pid, TIME: mapProcesses[i]["TIME"].(string),
-			CMD: mapProcesses[i]["COMMAND"].(string), TTY: mapProcesses[i]["TTY"].(string),
+			CMD: mapProcesses[i]["COMMAND"].(string), TTY: tty,
 			UID:uid,PPID:ppid, F:f, CPU:mapProcesses[i]["CPU"].(string),USER:mapProcesses[i]["USER"].(string),
 			NI:ni, RSS:rss, WCHAN:mapProcesses[i]["WCHAN"].(string), STAT:mapProcesses[i]["STAT"].(string),
 			STIME:mapProcesses[i]["STIME"].(string)}
