@@ -45,6 +45,8 @@
   <div class="block">
     <span class="demonstration">Total item count</span>
     <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
             :page-size="100"
             layout="total, prev, pager, next"
             :total="1000">
@@ -61,12 +63,19 @@ export default {
         return {
             ready:false,
             processes: [],
+            splitProcesses:[],
             switchUser : true,
             selectUser:[]
         }
     },
     methods: {
       testNewFunctional (e,r) {},
+        handleSizeChange(val) {
+            console.log(`${val} items per page`);
+        },
+      handleCurrentChange(val) {
+          console.log(`${val} items per page`);
+      },
       selectingUser(arr){
           this.selectUser  = Object.values(arr)[0]
        },
@@ -108,6 +117,12 @@ export default {
                 this.passThroughFilter()
                 this.ready = true
 
+//                this.processes.slice(1, 3)
+             for (let i = 5,pre = 0;i <= this.processes.length;i = i + 5) {
+                 this.splitProcesses = this.processes.slice(pre, i)
+                 pre = pre + 5
+             }
+            console.log(  this.splitProcesses);
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);
