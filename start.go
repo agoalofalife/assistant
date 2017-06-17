@@ -32,7 +32,7 @@ func Go() {
 				ps := New()
 				ps.allPs()
 				so.Emit("listProcess", string(ps.toJson()))
-				time.Sleep(time.Second)
+				time.Sleep(10 * time.Second)
 			}
 
 		}()
