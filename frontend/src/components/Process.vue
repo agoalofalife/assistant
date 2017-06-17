@@ -117,25 +117,13 @@ export default {
                 let temp       = JSON.parse(msg)
 
                 this.passThroughFilter()
-                this.ready = true
+                this.ready                 = true
                 this.splitProcesses.length = 0
-              console.log( this.processes.length );
-//             for (let i = 5,pre = 0;i <= this.processes.length;i = i + 5) {
-//                 this.splitProcesses[this.splitProcesses.length] = this.processes.slice(pre, i)
-//                 pre = pre + 5
-//             }
-//            let counter = 0
+
              while (temp.length !== 0) {
                  this.splitProcesses[this.splitProcesses.length] = temp.splice(0,5)
              }
-//                this.splitProcesses[this.splitProcesses.length] = this.processes.splice(0,5)
-//                this.splitProcesses[this.splitProcesses.length] = this.processes.splice(0,5)
-//                this.splitProcesses[this.splitProcesses.length] = this.processes.splice(0,5)
-//            console.log(  JSON.parse(msg).length)
-//            console.log(   JSON.parse(msg).splice(0,5))
-//            console.log(   JSON.parse(msg).length)
 
-                console.log( this.splitProcesses )
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);
