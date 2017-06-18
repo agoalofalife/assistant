@@ -98,8 +98,33 @@ export default {
         }
     },
     methods: {
-      renderHeader(h, { column, $index }){
-        console.log( column , $index);
+      renderHeader(createElement, { column }){
+          if (column.label === 'USER') {
+              return createElement(
+                  'div',
+                  [column.label],{
+                      //                      createElement('span', [column.label], {
+                          props: {
+                              filters:"listUsers",
+                              label:column.label,
+                              prop:column.label,
+                              filterMethod:"filterUser"
+                          }
+//                      }),
+                  }
+              )
+          } else {
+              return createElement(
+                  'div',
+                  [
+                      createElement('span', [column.label], {
+                          style: {
+                              fontSize: '10px'
+                          }
+                      }),
+                  ]
+              );
+          }
       },
       hideColumnSelect(key, keyPath) {
           console.log(key, keyPath);
