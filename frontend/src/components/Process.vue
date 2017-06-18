@@ -47,7 +47,7 @@
                   @current-change="handleCurrentChange"
                   :page-size="pageSize"
                   layout="total, prev, pager, next"
-                  :total="processes.length">
+                  :total="countProcesses">
           </el-pagination>
         </div>
       </el-col>
@@ -67,7 +67,8 @@ export default {
             selectUser:[],
             pageSize: 8,
             defaultPage:0,
-            currentPage:0
+            currentPage:0,
+            countProcesses:0
         }
     },
     methods: {
@@ -81,12 +82,14 @@ export default {
       selectingUser(arr){
           this.selectUser  = Object.values(arr)[0]
        },
+      // filter User ps
       passThroughFilter(){
         if (this.selectUser.length > 0 ){
             this.processes = this.processes.filter(function (ps) {
                return  this.selectUser.indexOf(ps.USER) !== -1
             }.bind(this))
         }
+          return this.processes
       },
       // push emit kill process from list
       killPs(row) {
@@ -116,14 +119,13 @@ export default {
         events: {
             listProcess(msg) {
                 this.processes = JSON.parse(msg)
-                let temp       = JSON.parse(msg)
-
                 this.passThroughFilter()
+                this.countProcesses        = this.processes.length
                 this.ready                 = true
                 this.splitProcesses.length = 0
 
-             while (temp.length !== 0) {
-                 this.splitProcesses[this.splitProcesses.length] = temp.splice(0,this.pageSize)
+             while ( this.processes.length !== 0) {
+                 this.splitProcesses[this.splitProcesses.length] =  this.processes.splice(0, this.pageSize)
              }
 
             },
