@@ -1,6 +1,20 @@
 <template>
 <div>
     <el-col :span="20" class="process">
+      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="1">Processing Center</el-menu-item>
+        <el-submenu index="2">
+          <template slot="title"> <i class="el-icon-setting"></i> Column</template>
+          <el-menu-item index="2-1"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
+          <el-menu-item index="2-2"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
+          <el-menu-item index="2-3"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
+
+         <!---->
+          <!--<el-menu-item index="2-2">item two</el-menu-item>-->
+          <!--<el-menu-item index="2-3">item three</el-menu-item>-->
+        </el-submenu>
+
+      </el-menu>
       <!--<el-switch-->
       <!--v-model="switchUser"-->
       <!--on-color="#13ce66"-->
@@ -8,28 +22,29 @@
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
       <el-table   height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+        <!--<el-table-column v-for="column in listColumn" sortable fixed prop="{{ column}}" header-align="center" label="column" width="70"></el-table-column>-->
 
-        <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
-        <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
-        <el-table-column sortable  prop="F" header-align="center" label="F" width="90"></el-table-column>
-        <el-table-column sortable prop="UID" header-align="center" label="UID" width="70"></el-table-column>
-        <el-table-column sortable prop="PPID" header-align="center" label="PPID" width="70"></el-table-column>
+        <el-table-column v-show="false" sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
+        <!--<el-table-column sortable  prop="F" header-align="center" label="F" width="90"></el-table-column>-->
+        <!--<el-table-column sortable prop="UID" header-align="center" label="UID" width="70"></el-table-column>-->
+        <!--<el-table-column sortable prop="PPID" header-align="center" label="PPID" width="70"></el-table-column>-->
 
 
-        <el-table-column sortable prop="NI" header-align="center" label="NI" width="90"></el-table-column>
-        <el-table-column sortable prop="RSS" header-align="center" label="RSS" width="90"></el-table-column>
-        <el-table-column sortable prop="S" header-align="center" label="S" width="90"></el-table-column>
-        <el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>
-        <el-table-column sortable prop="TIME" header-align="center" label="TIME" width="100"></el-table-column>
-        <el-table-column sortable prop="STIME" header-align="center" label="STIME" width="100"></el-table-column>
-        <el-table-column prop="USER" header-align="center" label="USER"
-                         :filters="listUsers"
-                         :filter-method="filterUser"
-                          filter-placement="bottom-end"
-                          width="100">
-        </el-table-column>
-        <el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>
-        <el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="120"></el-table-column>
+        <!--<el-table-column sortable prop="NI" header-align="center" label="NI" width="90"></el-table-column>-->
+        <!--<el-table-column sortable prop="RSS" header-align="center" label="RSS" width="90"></el-table-column>-->
+        <!--<el-table-column sortable prop="S" header-align="center" label="S" width="90"></el-table-column>-->
+        <!--<el-table-column prop="TTY" header-align="center" label="TTY" width="90"></el-table-column>-->
+        <!--<el-table-column sortable prop="TIME" header-align="center" label="TIME" width="100"></el-table-column>-->
+        <!--<el-table-column sortable prop="STIME" header-align="center" label="STIME" width="100"></el-table-column>-->
+        <!--<el-table-column prop="USER" header-align="center" label="USER"-->
+                         <!--:filters="listUsers"-->
+                         <!--:filter-method="filterUser"-->
+                          <!--filter-placement="bottom-end"-->
+                          <!--width="100">-->
+        <!--</el-table-column>-->
+        <!--<el-table-column prop="CMD" header-align="center" label="CMD" ></el-table-column>-->
+        <!--<el-table-column prop="WCHAN" header-align="center" label="WCHAN" width="120"></el-table-column>-->
+        <!--OPERATIONS-->
         <el-table-column fixed="right"
                 label="OPERATIONS">
           <template scope="scope">
@@ -50,13 +65,18 @@ export default {
   name: 'hello',
     data() {
         return {
+            activeIndex: '1',
             ready:false,
             processes: [],
             switchUser : true,
             selectUser:[],
+            listColumn:['PID', 'CPU', 'F', 'UID'],
         }
     },
     methods: {
+        handleSelect(key, keyPath) {
+            console.log(key, keyPath);
+        },
       testNewFunctional (e,r) {},
         handleSizeChange(val) {
             console.log(`${val} handleSizeChange`);
