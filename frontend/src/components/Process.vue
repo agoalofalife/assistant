@@ -56,16 +56,18 @@
 </template>
 
 <script>
+  import ld from 'lodash/array'
 export default {
   name: 'hello',
     data() {
         return {
             ready:false,
             processes: [],
+            processesAll:[],
             splitProcesses:[],
             switchUser : true,
             selectUser:[],
-            pageSize: 8,
+            pageSize: 10,
             defaultPage:0,
             currentPage:0,
             countProcesses:0
@@ -83,7 +85,7 @@ export default {
           this.selectUser  = Object.values(arr)[0]
        },
       // filter User ps
-      passThroughFilter(){
+       passThroughFilter(){
         if (this.selectUser.length > 0 ){
             this.processes = this.processes.filter(function (ps) {
                return  this.selectUser.indexOf(ps.USER) !== -1
@@ -99,14 +101,18 @@ export default {
       },
       filterUser(value, row) {
           return row.USER === value;
-      }
+      },
+      splitterPagination(result, whatSplit) {
+          while ( whatSplit.length !== 0) {
+              result[result.length] =  whatSplit.splice(0, this.pageSize)
+          }
+      },
     },
     computed:{
         listUsers(){
             let resultCompare = []
             let result        = []
             this.processes.forEach((el) => {
-
                 if (!result.includes(el.USER)) {
                     result.push( el.USER)
                     resultCompare.push({ text: el.USER, value: el.USER })
@@ -118,15 +124,14 @@ export default {
     socket: {
         events: {
             listProcess(msg) {
-                this.processes = JSON.parse(msg)
+                this.processes             = JSON.parse(msg)
+                this.processesAll          = JSON.parse(msg)
                 this.passThroughFilter()
                 this.countProcesses        = this.processes.length
                 this.ready                 = true
                 this.splitProcesses.length = 0
 
-             while ( this.processes.length !== 0) {
-                 this.splitProcesses[this.splitProcesses.length] =  this.processes.splice(0, this.pageSize)
-             }
+                this.splitterPagination(this.splitProcesses, this.processesAll)
 
             },
            connect() {
