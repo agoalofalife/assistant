@@ -56,7 +56,7 @@
 </template>
 
 <script>
-  import ld from 'lodash/array'
+  import collect from 'collect.js'
 export default {
   name: 'hello',
     data() {
@@ -107,11 +107,15 @@ export default {
               result[result.length] =  whatSplit.splice(0, this.pageSize)
           }
       },
+        getCollapsePs() {
+            return collect( this.splitProcesses).collapse().all()
+        }
     },
     computed:{
         listUsers(){
             let resultCompare = []
             let result        = []
+
             this.processes.forEach((el) => {
                 if (!result.includes(el.USER)) {
                     result.push( el.USER)
@@ -131,8 +135,8 @@ export default {
                 this.ready                 = true
                 this.splitProcesses.length = 0
 
-                this.splitterPagination(this.splitProcesses, this.processesAll)
 
+                this.splitterPagination(this.splitProcesses, this.processesAll)
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);
