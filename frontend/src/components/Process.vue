@@ -1,27 +1,37 @@
 <template>
 <div>
     <el-col :span="20" class="process">
-      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="hideColumnSelect">
         <el-menu-item index="1">Processing Center</el-menu-item>
         <el-submenu index="2">
           <template slot="title"> <i class="el-icon-setting"></i> Column</template>
-          <el-menu-item index="2-1"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
-          <el-menu-item index="2-2"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
-          <el-menu-item index="2-3"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
+          <el-menu-item  v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox :label="column.name"></el-checkbox></el-menu-item>
+          <!--<el-menu-item index="2-2"><el-checkbox label="Option A"></el-checkbox></el-menu-item>-->
+          <!--<el-menu-item index="2-3"><el-checkbox label="Option A"></el-checkbox></el-menu-item>-->
          <!---->
           <!--<el-menu-item index="2-2">item two</el-menu-item>-->
           <!--<el-menu-item index="2-3">item three</el-menu-item>-->
         </el-submenu>
-
       </el-menu>
-      <!--<el-switch-->
-      <!--v-model="switchUser"-->
-      <!--on-color="#13ce66"-->
-      <!--off-color="#ff4949">-->
-      <!--</el-switch>-->
+
       <i class="el-icon-loading spinner" v-show="!ready"></i>
       <el-table   height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
-        <el-table-column v-for="column in listColumn" :key="column.name"  v-if="column.show" :sortable="column.sortable" :fixed="column.fixed" :prop="column.name" header-align="center" :width="column.width" :label="column.name"></el-table-column>
+        <el-table-column
+                v-for="column in listColumn"
+                :key="column.name"
+                v-if="column.show"
+                :sortable="column.sortable"
+                :fixed="column.fixed"
+                :prop="column.name"
+                header-align="center"
+                :width="column.width"
+                :label="column.name"
+                :render-header="renderHeader"
+        >
+                <!--:filters="column.filter != undefined ? listUsers : false"-->
+                <!--:filter-method="column.filter != undefined ? filterUser : function(){}"-->
+
+        </el-table-column>
         <!--<el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>-->
         <!--<el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>-->
         <!--<el-table-column sortable  prop="F" header-align="center" label="F" width="90"></el-table-column>-->
@@ -81,21 +91,23 @@ export default {
                 {name: 'TTY', width:90, fixed:false, sortable:true, show:true},
                 {name: 'TIME', width:100, fixed:false, sortable:true, show:true},
                 {name: 'STIME', width:100, fixed:false, sortable:true, show:true},
-                {name: 'USER', width:100, fixed:false, sortable:true, show:true},
+                {name: 'USER', width:100, fixed:false, sortable:false, show:true, filter:{filters : 'listUsers'}},
                 {name: 'CMD', width:120, fixed:false, sortable:true, show:true},
                 {name: 'WCHAN', width:120, fixed:false, sortable:true, show:true},
                 ],
-//            listColumn:['PID', 'CPU', 'F', 'UID', 'PPID', 'NI', 'RSS', 'S', 'TTY', 'TIME', 'STIME', 'USER', 'CMD', 'WCHAN'],
         }
     },
     methods: {
-        handleSelect(key, keyPath) {
-            console.log(key, keyPath);
-        },
+      renderHeader(h, { column, $index }){
+        console.log( column , $index);
+      },
+      hideColumnSelect(key, keyPath) {
+          console.log(key, keyPath);
+      },
       testNewFunctional (e,r) {},
-        handleSizeChange(val) {
-            console.log(`${val} handleSizeChange`);
-        },
+      handleSizeChange(val) {
+          console.log(`${val} handleSizeChange`);
+      },
       handleCurrentChange(page) {
           this.currentPage = page
       },
