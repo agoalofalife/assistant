@@ -7,7 +7,7 @@
       <!--off-color="#ff4949">-->
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="700" v-show="ready" :data="splitProcesses[currentPage]" style="width: 100%" @filter-change="selectingUser">
+      <el-table   height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
 
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
@@ -40,17 +40,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-col :span="22">
-        <div class="block">
-          <el-pagination
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :page-size="pageSize"
-                  layout="total, prev, pager, next"
-                  :total="countProcesses">
-          </el-pagination>
-        </div>
-      </el-col>
     </el-col>
 </div>
 </template>
@@ -63,14 +52,8 @@ export default {
         return {
             ready:false,
             processes: [],
-            processesAll:[],
-            splitProcesses:[],
             switchUser : true,
             selectUser:[],
-            pageSize: 10,
-            defaultPage:0,
-            currentPage:0,
-            countProcesses:0
         }
     },
     methods: {
@@ -102,14 +85,6 @@ export default {
       filterUser(value, row) {
           return row.USER === value;
       },
-      splitterPagination(result, whatSplit) {
-          while ( whatSplit.length !== 0) {
-              result[result.length] =  whatSplit.splice(0, this.pageSize)
-          }
-      },
-        getCollapsePs() {
-            return collect( this.splitProcesses).collapse().all()
-        }
     },
     computed:{
         listUsers(){
@@ -129,14 +104,9 @@ export default {
         events: {
             listProcess(msg) {
                 this.processes             = JSON.parse(msg)
-                this.processesAll          = JSON.parse(msg)
                 this.passThroughFilter()
-                this.countProcesses        = this.processes.length
+
                 this.ready                 = true
-                this.splitProcesses.length = 0
-
-
-                this.splitterPagination(this.splitProcesses, this.processesAll)
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);
