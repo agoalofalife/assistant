@@ -7,7 +7,7 @@
       <!--off-color="#ff4949">-->
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="500" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table   height="700" v-show="ready" :data="splitProcesses[currentPage]" style="width: 100%" @filter-change="selectingUser">
 
         <el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>
         <el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
@@ -42,7 +42,6 @@
       </el-table>
       <el-col :span="22">
         <div class="block">
-          <span class="demonstration">Total item count</span>
           <el-pagination
                   @size-change="handleSizeChange"
                   @current-change="handleCurrentChange"
@@ -67,7 +66,8 @@ export default {
             switchUser : true,
             selectUser:[],
             pageSize: 8,
-            defaultPage:0
+            defaultPage:0,
+            currentPage:0
         }
     },
     methods: {
@@ -75,8 +75,8 @@ export default {
         handleSizeChange(val) {
             console.log(`${val} handleSizeChange`);
         },
-      handleCurrentChange(val) {
-          console.log(`${val} handleCurrentChange`);
+      handleCurrentChange(page) {
+          this.currentPage = page
       },
       selectingUser(arr){
           this.selectUser  = Object.values(arr)[0]
@@ -143,6 +143,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .el-pagination{
+    margin-top: 2%;
+  }
   .spinner{
     font-size: 50px;
     position: absolute;
