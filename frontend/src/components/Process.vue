@@ -40,19 +40,19 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-col :span="22">
+        <div class="block">
+          <span class="demonstration">Total item count</span>
+          <el-pagination
+                  @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange"
+                  :page-size="pageSize"
+                  layout="total, prev, pager, next"
+                  :total="processes.length">
+          </el-pagination>
+        </div>
+      </el-col>
     </el-col>
-  <el-col :span="22">
-  <div class="block">
-    <span class="demonstration">Total item count</span>
-    <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :page-size="100"
-            layout="total, prev, pager, next"
-            :total="1000">
-    </el-pagination>
-  </div>
-  </el-col>
 </div>
 </template>
 
@@ -65,16 +65,18 @@ export default {
             processes: [],
             splitProcesses:[],
             switchUser : true,
-            selectUser:[]
+            selectUser:[],
+            pageSize: 8,
+            defaultPage:0
         }
     },
     methods: {
       testNewFunctional (e,r) {},
         handleSizeChange(val) {
-            console.log(`${val} items per page`);
+            console.log(`${val} handleSizeChange`);
         },
       handleCurrentChange(val) {
-          console.log(`${val} items per page`);
+          console.log(`${val} handleCurrentChange`);
       },
       selectingUser(arr){
           this.selectUser  = Object.values(arr)[0]
@@ -121,7 +123,7 @@ export default {
                 this.splitProcesses.length = 0
 
              while (temp.length !== 0) {
-                 this.splitProcesses[this.splitProcesses.length] = temp.splice(0,5)
+                 this.splitProcesses[this.splitProcesses.length] = temp.splice(0,this.pageSize)
              }
 
             },
