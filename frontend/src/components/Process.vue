@@ -8,7 +8,6 @@
           <el-menu-item index="2-1"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
           <el-menu-item index="2-2"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
           <el-menu-item index="2-3"><el-checkbox label="Option A"></el-checkbox></el-menu-item>
-
          <!---->
           <!--<el-menu-item index="2-2">item two</el-menu-item>-->
           <!--<el-menu-item index="2-3">item three</el-menu-item>-->
@@ -22,9 +21,9 @@
       <!--</el-switch>-->
       <i class="el-icon-loading spinner" v-show="!ready"></i>
       <el-table   height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
-        <!--<el-table-column v-for="column in listColumn" sortable fixed prop="{{ column}}" header-align="center" label="column" width="70"></el-table-column>-->
-
-        <el-table-column v-show="false" sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>
+        <el-table-column v-for="column in listColumn" :key="column.name"  v-if="column.show" :sortable="column.sortable" :fixed="column.fixed" :prop="column.name" header-align="center" :width="column.width" :label="column.name"></el-table-column>
+        <!--<el-table-column sortable fixed prop="PID" header-align="center" label="PID" width="70"></el-table-column>-->
+        <!--<el-table-column sortable fixed prop="CPU" header-align="center" label="CPU" width="70"></el-table-column>-->
         <!--<el-table-column sortable  prop="F" header-align="center" label="F" width="90"></el-table-column>-->
         <!--<el-table-column sortable prop="UID" header-align="center" label="UID" width="70"></el-table-column>-->
         <!--<el-table-column sortable prop="PPID" header-align="center" label="PPID" width="70"></el-table-column>-->
@@ -70,7 +69,23 @@ export default {
             processes: [],
             switchUser : true,
             selectUser:[],
-            listColumn:['PID', 'CPU', 'F', 'UID'],
+            listColumn : [
+                {name: 'PID', width:80, fixed:true, sortable:true, show:true},
+                {name: 'CPU', width:70, fixed:true, sortable:true, show:true},
+                {name: 'F', width:90, fixed:false, sortable:true, show:true},
+                {name: 'UID', width:70, fixed:false, sortable:true, show:true},
+                {name: 'PPID', width:70, fixed:false, sortable:true, show:true},
+                {name: 'NI', width:90, fixed:false, sortable:true, show:true},
+                {name: 'RSS', width:90, fixed:false, sortable:true, show:true},
+                {name: 'S', width:90, fixed:false, sortable:true, show:true},
+                {name: 'TTY', width:90, fixed:false, sortable:true, show:true},
+                {name: 'TIME', width:100, fixed:false, sortable:true, show:true},
+                {name: 'STIME', width:100, fixed:false, sortable:true, show:true},
+                {name: 'USER', width:100, fixed:false, sortable:true, show:true},
+                {name: 'CMD', width:120, fixed:false, sortable:true, show:true},
+                {name: 'WCHAN', width:120, fixed:false, sortable:true, show:true},
+                ],
+//            listColumn:['PID', 'CPU', 'F', 'UID', 'PPID', 'NI', 'RSS', 'S', 'TTY', 'TIME', 'STIME', 'USER', 'CMD', 'WCHAN'],
         }
     },
     methods: {
