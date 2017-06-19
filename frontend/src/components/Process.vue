@@ -100,36 +100,13 @@ export default {
     methods: {
       renderHeader(createElement, { column }){
           if (column.label === 'USER') {
-              console.log( column );
-              return createElement('el-table-column',[column.label], {
-                  props: {
-                              filters:"listUsers",
-                              label:column.label,
-                              prop:column.label,
-                              filterMethod:"filterUser"
-                          }
-              })
-//              return createElement(
-//                  'div',
-//                  [column.label],{
-//                      //                      createElement('span', [column.label], {
-//                          props: {
-//                              filters:"listUsers",
-//                              label:column.label,
-//                              prop:column.label,
-//                              filterMethod:"filterUser"
-//                          }
-////                      }),
-//                  }
-//              )
-          } else {
-              return createElement(
-                  'div',
-                  [
-                      createElement('span', [column.label]),
-                  ]
-              );
+              column.filters         = this.listUsers
+              column.filterPlacement = 'bottom-end'
+              column.filterMethod    = this.filterUser
+              column.filterOpened    = false
+              column.filterable      = []
           }
+          return createElement('span', [column.label])
       },
       hideColumnSelect(key, keyPath) {
           console.log(key, keyPath);
@@ -180,10 +157,9 @@ export default {
     socket: {
         events: {
             listProcess(msg) {
+                this.ready                 = true
                 this.processes             = JSON.parse(msg)
                 this.passThroughFilter()
-
-                this.ready                 = true
             },
            connect() {
            console.info("Websocket connected to " + this.$socket.nsp);
@@ -199,11 +175,7 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .el-pagination{
-    margin-top: 2%;
-  }
   .spinner{
     font-size: 50px;
     position: absolute;
