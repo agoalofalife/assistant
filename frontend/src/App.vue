@@ -6,12 +6,8 @@
     <el-col :span="3" v-show="stateMenu">
       <el-menu default-active="2" class="el-menu-vertical-demo" theme="dark" router>
         <el-submenu index="1">
-          <!--<i class=" el-icon-circle-cross"></i>-->
-          <!--<template slot="title">General</template>-->
           <template slot="title"><i class="el-icon-close" @click="changeStateMenu"></i>General</template>
-
           <el-menu-item index="process">Process</el-menu-item>
-          <el-menu-item index="process">Setting</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>

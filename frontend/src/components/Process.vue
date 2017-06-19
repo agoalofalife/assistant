@@ -2,7 +2,8 @@
 <div>
     <el-col :span="20" class="process">
       <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" menu-trigger="">
-        <el-submenu index="1" >
+        <el-menu-item index="1" @click="tree">Tree</el-menu-item>
+        <el-submenu index="2" >
           <template slot="title"> <i class="el-icon-setting"></i>Column</template>
           <el-col :span="1">
             <el-menu-item @click="test" v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
@@ -26,7 +27,7 @@
       </el-menu>
 
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table height="750" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table v-if="showTable" height="750" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
         <el-table-column
               v-for="column in listColumn"
              :key="column.name"
@@ -51,6 +52,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <el-tree :data="processesTree" :props="defaultProps"></el-tree>
     </el-col>
 </div>
 </template>
@@ -61,11 +63,13 @@ export default {
   name: 'hello',
     data() {
         return {
-            switchColorHeader:true,
+            showTree:false,
+            showTable:true,
             activeIndex: '1',
-            theme:'dark',
+            theme:'light',
             ready:false,
             processes: [],
+            processesTree: [],
             switchUser : true,
             selectUser:[],
             listColumn : [
@@ -84,15 +88,34 @@ export default {
                 {name: 'CMD', width:120, fixed:false, sortable:true, show:true},
                 {name: 'WCHAN', width:120, fixed:false, sortable:true, show:true},
                 ],
+            defaultProps: {
+                children: 'children',
+                label: 'PID'
+            }
         }
     },
     methods: {
       test(){
           console.log('>S')
-//          setTimeout(function () {
-//              document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display = ""
-//          },500)
+      },
+      tree() {
+        this.showTable = !this.showTable
+          // builder tree
+          this.processes.forEach((function (item) {
+              let searching =   collect(this.processes).where('PID', item.PPID)
+                  if  (!searching.isEmpty()) {
+                     let ps = searching.first()
+                      if (ps.children !== undefined) {
+                          this.processesTree.push(    ps.children[ps.children.length] = item)
+                      } else{
+                          ps.children = []
+                          this.processesTree.push( ps.children[ps.children.length] = item)
+                      }
+                  }
+          }).bind(this))
 
+
+          console.log(   this.processesTree)
       },
       // choose for hide column in table
       chooseHideColumn(columnName) {
