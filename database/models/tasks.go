@@ -4,10 +4,11 @@ import (
 	"github.com/boltdb/bolt"
 	"fmt"
 	"encoding/json"
-	"encoding/binary"
+	"strconv"
 )
 
 const tableName = "Task"
+
 type Task struct {
 	ID int `json:"id"`
 	Name string `json:"name"`
@@ -29,18 +30,35 @@ func (task *Task) CreateTask() error {
 			return err
 		}
 
-		return b.Put(itob(task.ID), buf)
+		return b.Put([]byte(strconv.Itoa(task.ID)), buf)
 	})
 }
 
-func (task *Task) Find(Id int)  error {
-	return task.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte("MyBucket"))
-		v := b.Get(itob(Id))
-		fmt.Printf("The answer is: %s\n", v)
+
+func (task *Task) All () {
+	task.db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(tableName))
+		c := b.Cursor()
+
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			fmt.Printf("key=%s, value=%s\n", k, v)
+		}
 		return nil
 	})
 }
+
+func (task *Task) Find(Id int)  ( stringJson []byte, err error) {
+	err =  task.db.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte(tableName))
+		stringJson = b.Get([]byte(strconv.Itoa(Id)))
+		fmt.Printf("The value is: %s\n", stringJson)
+		return nil
+	})
+
+	return stringJson, err
+}
+
+
 func NewTask(db *bolt.DB) (task *Task, err error)  {
 	err = db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucket([]byte(tableName))
@@ -51,11 +69,4 @@ func NewTask(db *bolt.DB) (task *Task, err error)  {
 	})
 	task = &Task{db:db}
 	return task, err
-}
-
-// itob returns an 8-byte big endian representation of v.
-func itob(v int) []byte {
-	b := make([]byte, 8)
-	binary.BigEndian.PutUint64(b, uint64(v))
-	return b
 }
