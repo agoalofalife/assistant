@@ -1,21 +1,22 @@
 package models
 
 import (
-	"github.com/boltdb/bolt"
-	"fmt"
 	"encoding/json"
+	"fmt"
+	"github.com/agoalofalife/assistant/database"
+	"github.com/boltdb/bolt"
 	"strconv"
 )
 
 const tableName = "Task"
 
 type Task struct {
-	ID int `json:"id"`
-	Name string `json:"name"`
+	ID             int    `json:"id"`
+	Name           string `json:"name"`
 	CommandConsole string `json:"commandConsole"`
-	TimeOut string `json:"timeOut"`
-	TimeStart string `json:"timeStart"`
-	db *bolt.DB
+	TimeOut        string `json:"timeOut"`
+	TimeStart      string `json:"timeStart"`
+	db             *bolt.DB
 }
 
 func (task *Task) CreateTask() error {
@@ -35,24 +36,27 @@ func (task *Task) CreateTask() error {
 }
 
 // return all list task string
-func (task *Task) All () ( stringJson [][]byte, err error) {
-	
+func (task *Task) All() (models []database.Model, err error) {
+
 	task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
 		c := b.Cursor()
 
 		for key, value := c.First(); key != nil; key, value = c.Next() {
 			fmt.Printf("key=%s, value=%s\n", key, value)
-			stringJson = append(stringJson, value)
+			task := new(Task)
+			json.Unmarshal(value, task)
+			models = append(models, task)
 		}
+
 		return nil
 	})
-	return stringJson, err
+	return models, err
 }
 
 // find to Id
-func (task *Task) Find(Id int)  ( stringJson []byte, err error) {
-	err =  task.db.View(func(tx *bolt.Tx) error {
+func (task *Task) Find(Id int) (stringJson []byte, err error) {
+	err = task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
 		stringJson = b.Get([]byte(strconv.Itoa(Id)))
 		fmt.Printf("Find method is: %s\n", stringJson)
@@ -61,8 +65,7 @@ func (task *Task) Find(Id int)  ( stringJson []byte, err error) {
 	return stringJson, err
 }
 
-
-func NewTask(db *bolt.DB) (task *Task, err error)  {
+func NewTask(db *bolt.DB) (task *Task, err error) {
 	err = db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucket([]byte(tableName))
 		if err != nil {
@@ -70,6 +73,6 @@ func NewTask(db *bolt.DB) (task *Task, err error)  {
 		}
 		return nil
 	})
-	task = &Task{db:db}
+	task = &Task{db: db}
 	return task, err
 }
