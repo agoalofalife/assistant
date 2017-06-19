@@ -1,12 +1,12 @@
 <template>
 <div>
     <el-col :span="20" class="process">
-      <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-        <el-menu-item index="1">Processing Center</el-menu-item>
-        <el-submenu index="2">
+      <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" menu-trigger="">
+        <!--<el-menu-item index="1">Processing Center</el-menu-item>-->
+        <el-submenu index="1">
           <template slot="title"> <i class="el-icon-setting"></i>Column</template>
           <el-col :span="1">
-            <el-menu-item v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
+            <el-menu-item ref="columnHide" v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
           </el-col>
         </el-submenu>
 
@@ -15,8 +15,8 @@
                 v-model="switchColorHeader"
                 on-color="#324157"
                 off-color="#324157"
-                on-value="light"
-                off-value="dark"
+                on-value="dark"
+                off-value="light"
                 off-text="dark"
                 on-text="light"
                 @change="changeColorHeader"
@@ -36,7 +36,6 @@
              :fixed="column.fixed"
              :prop="column.name"
               header-align="center"
-             :width="column.width"
              :label="column.name"
              :render-header="renderHeader"
         >
@@ -91,8 +90,13 @@ export default {
     methods: {
       // choose for hide column in table
       chooseHideColumn(columnName) {
+//          document.querySelector('.el-menu ul').style.display = true
+
           let checkbox  =     collect( this.listColumn ).where('name', columnName ).first()
           checkbox.show = !checkbox.show
+          console.log(   document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display)
+
+//          document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display = ""
       },
       changeColorHeader (switcher) {
           this.theme = switcher
