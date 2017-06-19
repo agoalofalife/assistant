@@ -2,7 +2,7 @@
 <div>
     <el-col :span="20" class="process">
       <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" menu-trigger="">
-        <el-menu-item index="1" @click="tree">Tree</el-menu-item>
+        <!--<el-menu-item index="1" @click="tree">Tree</el-menu-item>-->
         <el-submenu index="2" >
           <template slot="title"> <i class="el-icon-setting"></i>Column</template>
           <el-col :span="1">
@@ -27,7 +27,7 @@
       </el-menu>
 
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table v-if="showTable" height="750" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table v-if="showTable" height="800" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
         <el-table-column
               v-for="column in listColumn"
              :key="column.name"
@@ -52,7 +52,9 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-tree :data="processesTree" :props="defaultProps"></el-tree>
+      <!--<el-col :span="24">-->
+      <!--<el-tree :data="processesTree" :props="defaultProps"></el-tree>-->
+      <!--</el-col>-->
     </el-col>
 </div>
 </template>
@@ -90,7 +92,7 @@ export default {
                 ],
             defaultProps: {
                 children: 'children',
-                label: 'PID'
+                label: 'CMD'
             }
         }
     },
@@ -114,8 +116,6 @@ export default {
                   }
           }).bind(this))
 
-
-          console.log(   this.processesTree)
       },
       // choose for hide column in table
       chooseHideColumn(columnName) {
