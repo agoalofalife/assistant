@@ -1,7 +1,7 @@
 <template>
 <div>
     <el-col :span="20" class="process">
-      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+      <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
         <el-menu-item index="1">Processing Center</el-menu-item>
         <el-submenu index="2">
           <template slot="title"> <i class="el-icon-setting"></i>Column</template>
@@ -9,6 +9,21 @@
             <el-menu-item v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
           </el-col>
         </el-submenu>
+
+        <el-col :span="2"  :offset="17" class="el-menu--horizontal el-submenu el-submenu__title">
+        <el-switch
+                v-model="switchColorHeader"
+                on-color="#324157"
+                off-color="#324157"
+                on-value="light"
+                off-value="dark"
+                off-text="dark"
+                on-text="light"
+                @change="changeColorHeader"
+        >
+        </el-switch>
+        </el-col>
+
       </el-menu>
 
       <i class="el-icon-loading spinner" v-show="!ready"></i>
@@ -43,12 +58,14 @@
 </template>
 
 <script>
-  import collect from 'collect.js'
+import collect from 'collect.js'
 export default {
   name: 'hello',
     data() {
         return {
+            switchColorHeader:true,
             activeIndex: '1',
+            theme:'dark',
             ready:false,
             processes: [],
             switchUser : true,
@@ -76,6 +93,9 @@ export default {
       chooseHideColumn(columnName) {
           let checkbox  =     collect( this.listColumn ).where('name', columnName ).first()
           checkbox.show = !checkbox.show
+      },
+      changeColorHeader (switcher) {
+          this.theme = switcher
       },
       renderHeader(createElement, { column }){
           if (column.label === 'USER') {
@@ -128,7 +148,7 @@ export default {
                 }
             });
             return resultCompare
-        }
+        },
     },
     socket: {
         events: {
