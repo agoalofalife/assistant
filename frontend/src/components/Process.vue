@@ -12,7 +12,7 @@
         <!--Switch theme header-->
         <el-col :span="2"  :offset="17" class="el-menu--horizontal el-submenu el-submenu__title">
         <el-switch
-                v-model="switchColorHeader"
+                v-model="theme"
                 on-color="#324157"
                 off-color="#324157"
                 on-value="dark"
