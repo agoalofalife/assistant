@@ -2,14 +2,14 @@
 <div>
     <el-col :span="20" class="process">
       <el-menu :theme="theme" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" menu-trigger="">
-        <!--<el-menu-item index="1">Processing Center</el-menu-item>-->
-        <el-submenu index="1">
+        <el-submenu index="1" >
           <template slot="title"> <i class="el-icon-setting"></i>Column</template>
           <el-col :span="1">
-            <el-menu-item ref="columnHide" v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
+            <el-menu-item @click="test" v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
           </el-col>
         </el-submenu>
 
+        <!--Switch theme header-->
         <el-col :span="2"  :offset="17" class="el-menu--horizontal el-submenu el-submenu__title">
         <el-switch
                 v-model="switchColorHeader"
@@ -23,11 +23,10 @@
         >
         </el-switch>
         </el-col>
-
       </el-menu>
 
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table height="750" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
         <el-table-column
               v-for="column in listColumn"
              :key="column.name"
@@ -88,14 +87,17 @@ export default {
         }
     },
     methods: {
+      test(){
+          console.log('>S')
+//          setTimeout(function () {
+//              document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display = ""
+//          },500)
+
+      },
       // choose for hide column in table
       chooseHideColumn(columnName) {
-//          document.querySelector('.el-menu ul').style.display = true
-
           let checkbox  =     collect( this.listColumn ).where('name', columnName ).first()
           checkbox.show = !checkbox.show
-          console.log(   document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display)
-
 //          document.querySelector('.el-menu--horizontal .el-submenu .el-menu').style.display = ""
       },
       changeColorHeader (switcher) {
