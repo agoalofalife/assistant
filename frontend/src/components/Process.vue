@@ -1,21 +1,18 @@
 <template>
 <div>
     <el-col :span="20" class="process">
-      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="hideColumnSelect">
+      <el-menu theme="dark" :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
         <el-menu-item index="1">Processing Center</el-menu-item>
         <el-submenu index="2">
-          <template slot="title"> <i class="el-icon-setting"></i> Column</template>
-          <el-menu-item  v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox :label="column.name"></el-checkbox></el-menu-item>
-          <!--<el-menu-item index="2-2"><el-checkbox label="Option A"></el-checkbox></el-menu-item>-->
-          <!--<el-menu-item index="2-3"><el-checkbox label="Option A"></el-checkbox></el-menu-item>-->
-         <!---->
-          <!--<el-menu-item index="2-2">item two</el-menu-item>-->
-          <!--<el-menu-item index="2-3">item three</el-menu-item>-->
+          <template slot="title"> <i class="el-icon-setting"></i>Column</template>
+          <el-col :span="1">
+            <el-menu-item v-for="column in listColumn"  :key="column.name" :index="column.name"><el-checkbox @change="chooseHideColumn(column.name)" :label="column.name"></el-checkbox></el-menu-item>
+          </el-col>
         </el-submenu>
       </el-menu>
 
       <i class="el-icon-loading spinner" v-show="!ready"></i>
-      <el-table   height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
+      <el-table height="700" v-show="ready" :data="processes" style="width: 100%" @filter-change="selectingUser">
         <el-table-column
               v-for="column in listColumn"
              :key="column.name"
@@ -75,6 +72,11 @@ export default {
         }
     },
     methods: {
+      // choose for hide column in table
+      chooseHideColumn(columnName) {
+          let checkbox  =     collect( this.listColumn ).where('name', columnName ).first()
+          checkbox.show = !checkbox.show
+      },
       renderHeader(createElement, { column }){
           if (column.label === 'USER') {
               column.filters         = this.listUsers
@@ -84,9 +86,6 @@ export default {
               column.filterable      = []
           }
           return createElement('span', [column.label])
-      },
-      hideColumnSelect(key, keyPath) {
-          console.log(key, keyPath);
       },
       testNewFunctional (e,r) {},
       handleSizeChange(val) {
