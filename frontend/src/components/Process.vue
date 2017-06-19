@@ -100,28 +100,33 @@ export default {
     methods: {
       renderHeader(createElement, { column }){
           if (column.label === 'USER') {
-              return createElement(
-                  'div',
-                  [column.label],{
-                      //                      createElement('span', [column.label], {
-                          props: {
+              console.log( column );
+              return createElement('el-table-column',[column.label], {
+                  props: {
                               filters:"listUsers",
                               label:column.label,
                               prop:column.label,
                               filterMethod:"filterUser"
                           }
-//                      }),
-                  }
-              )
+              })
+//              return createElement(
+//                  'div',
+//                  [column.label],{
+//                      //                      createElement('span', [column.label], {
+//                          props: {
+//                              filters:"listUsers",
+//                              label:column.label,
+//                              prop:column.label,
+//                              filterMethod:"filterUser"
+//                          }
+////                      }),
+//                  }
+//              )
           } else {
               return createElement(
                   'div',
                   [
-                      createElement('span', [column.label], {
-                          style: {
-                              fontSize: '10px'
-                          }
-                      }),
+                      createElement('span', [column.label]),
                   ]
               );
           }
