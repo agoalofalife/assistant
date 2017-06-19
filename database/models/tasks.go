@@ -34,27 +34,30 @@ func (task *Task) CreateTask() error {
 	})
 }
 
-
-func (task *Task) All () {
+// return all list task string
+func (task *Task) All () ( stringJson [][]byte, err error) {
+	
 	task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
 		c := b.Cursor()
 
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-			fmt.Printf("key=%s, value=%s\n", k, v)
+		for key, value := c.First(); key != nil; key, value = c.Next() {
+			fmt.Printf("key=%s, value=%s\n", key, value)
+			stringJson = append(stringJson, value)
 		}
 		return nil
 	})
+	return stringJson, err
 }
 
+// find to Id
 func (task *Task) Find(Id int)  ( stringJson []byte, err error) {
 	err =  task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
 		stringJson = b.Get([]byte(strconv.Itoa(Id)))
-		fmt.Printf("The value is: %s\n", stringJson)
+		fmt.Printf("Find method is: %s\n", stringJson)
 		return nil
 	})
-
 	return stringJson, err
 }
 
