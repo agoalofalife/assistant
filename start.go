@@ -4,7 +4,6 @@ import (
 	"github.com/googollee/go-socket.io"
 	"log"
 	"net/http"
-
 	"time"
 	"os"
 )
@@ -25,7 +24,7 @@ func Go() {
 		return true
 	})
 
-	server.On("connection", func(so socketio.Socket) {
+	server.On(CONNECT, func(so socketio.Socket) {
 		log.Println("on connection")
 		go func() {
 			for {
@@ -38,7 +37,7 @@ func Go() {
 		}()
 
 	})
-	server.On("error", func(so socketio.Socket, err error) {
+	server.On(ERROR, func(so socketio.Socket, err error) {
 		log.Println("error:", err)
 	})
 
