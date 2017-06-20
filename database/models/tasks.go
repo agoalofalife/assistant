@@ -18,7 +18,7 @@ type Task struct {
 	TimeStart      string `json:"timeStart"`
 	db             *bolt.DB
 }
-
+// create task
 func (task *Task) CreateTask() error {
 	return task.db.Update(func(tx *bolt.Tx) error {
 

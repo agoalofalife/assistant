@@ -4,8 +4,8 @@ import (
 	"github.com/googollee/go-socket.io"
 	"log"
 	"net/http"
-	"time"
 	"os"
+	"time"
 )
 
 func Go() {
@@ -14,12 +14,12 @@ func Go() {
 		log.Fatal(err)
 	}
 
-			//ps := New()
-			//ps.allPs()
+	//ps := New()
+	//ps.allPs()
 
 	// kill process
 	server.On(KILL_PS, func(pid int) bool {
-		process,_ := os.FindProcess(pid)
+		process, _ := os.FindProcess(pid)
 		process.Kill()
 		return true
 	})
