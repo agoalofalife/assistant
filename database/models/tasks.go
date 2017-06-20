@@ -6,6 +6,7 @@ import (
 	"github.com/agoalofalife/assistant/database"
 	"github.com/boltdb/bolt"
 	"strconv"
+	"log"
 )
 
 const tableName = "Task"
@@ -66,6 +67,14 @@ func (task *Task) Find(Id int) (model database.Modeler, err error) {
 		return nil
 	})
 	return model, err
+}
+
+func (task *Task) ToJson() ([]byte, error) {
+	by, err := json.Marshal(task)
+	if err != nil {
+		log.Println(err)
+	}
+	return by, err
 }
 
 func NewTask(db *bolt.DB) (task *Task, err error) {
