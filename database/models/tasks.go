@@ -36,7 +36,7 @@ func (task *Task) CreateTask() error {
 }
 
 // return all list task string
-func (task *Task) All() (models []database.Model, err error) {
+func (task *Task) All() (models []database.Modeler, err error) {
 
 	task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
@@ -55,14 +55,17 @@ func (task *Task) All() (models []database.Model, err error) {
 }
 
 // find to Id
-func (task *Task) Find(Id int) (stringJson []byte, err error) {
+func (task *Task) Find(Id int) (model database.Modeler, err error) {
+
 	err = task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
-		stringJson = b.Get([]byte(strconv.Itoa(Id)))
+		stringJson := b.Get([]byte(strconv.Itoa(Id)))
+		model = new(Task)
+		json.Unmarshal(stringJson, model)
 		fmt.Printf("Find method is: %s\n", stringJson)
 		return nil
 	})
-	return stringJson, err
+	return model, err
 }
 
 func NewTask(db *bolt.DB) (task *Task, err error) {
