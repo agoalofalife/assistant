@@ -1,4 +1,5 @@
 <template>
+    <div>
     <el-col :span="16" :offset="3" >
     <el-table :data="tasks" border style="width: 100%">
         <el-table-column
@@ -30,37 +31,33 @@
                 label="Operations"
                 width="150">
             <template scope="scope">
-                <el-button type="text" @click="openEdit" size="small">Edit</el-button>
-                <el-button  type="text" size="small">Detail</el-button>
+                <el-button type="text" @click="openEdit(scope.row)" size="small">Edit</el-button>
             </template>
         </el-table-column>
     </el-table>
+    </el-col>
+    <el-dialog  title="Edit Task" :visible.sync="modalEdit">
+        <el-form :model="form">
+            <el-form-item label="Name" :label-width="formLabelWidth">
+                <el-input v-model="form.name" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Command console" :label-width="formLabelWidth">
+            <el-input v-model="form.console" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Time start" :label-width="formLabelWidth">
+                <el-date-picker v-model="form.timeStart" type="datetime" placeholder="Select date and time"></el-date-picker>
+            </el-form-item>
 
-        <el-dialog title="Edit" :visible.sync="modalEdit">
-            <el-form :model="form">
-                <el-form-item label="Name" :label-width="formLabelWidth">
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Command console" :label-width="formLabelWidth">
-                    <el-input v-model="form.console" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="Command console" :label-width="formLabelWidth">
-                    <el-input v-model="form.console" auto-complete="off"></el-input>
-                </el-form-item>
-
-                <el-form-item label="Zones" :label-width="formLabelWidth">
-                    <el-select v-model="form.region" placeholder="Please select a zone">
-                        <el-option label="Zone No.1" value="shanghai"></el-option>
-                        <el-option label="Zone No.2" value="beijing"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
+            <el-form-item label="Time Out" :label-width="formLabelWidth">
+                <el-date-picker v-model="form.timeOut" type="datetime" placeholder="Select date and time"></el-date-picker>
+            </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
     <el-button @click="modalEdit = false">Cancel</el-button>
-    <el-button type="primary" @click="modalEdit = false">Confirm</el-button>
+    <el-button type="primary" @click="modalEdit = false">Save</el-button>
     </span>
     </el-dialog>
-    </el-col>
+    </div>
 </template>
 <style>
 
@@ -71,22 +68,25 @@
         data(){
             return{
                 tasks:[],
-                modalEdit:true,
+                modalEdit:false,
                 form: {
                     name: '',
                     console:'',
-                    region: '',
-                    date1: '',
-                    date2: '',
-                    delivery: false,
-                    type: [],
-                    resource: '',
-                    desc: ''
+                    timeStart: '',
+                    timeOut: '',
                 },
-                formLabelWidth: '120px'
+                formLabelWidth: '100px'
             }
         },
         methods : {
+            openEdit(row){
+                this.form.name      = row.name
+                this.form.console   = row.commandConsole
+                this.form.timeStart = row.timeStart
+                this.form.timeOut   = row.timeOut
+
+               this.modalEdit = true
+            }
         },
         mounted(){
             this.$socket.emit('list:queues', function(data){
