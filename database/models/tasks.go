@@ -3,7 +3,6 @@ package models
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/agoalofalife/assistant/database"
 	"github.com/boltdb/bolt"
 	"log"
 	"strconv"
@@ -17,6 +16,7 @@ type Task struct {
 	CommandConsole string `json:"commandConsole"`
 	TimeOut        string `json:"timeOut"`
 	TimeStart      string `json:"timeStart"`
+	collection	[]*Task
 	db             *bolt.DB
 }
 
@@ -38,7 +38,7 @@ func (task *Task) CreateTask() error {
 }
 
 // return all list task string
-func (task *Task) All() (models []database.Modeler, err error) {
+func (task *Task) All() (models []*Task, err error) {
 
 	task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
@@ -53,11 +53,12 @@ func (task *Task) All() (models []database.Modeler, err error) {
 
 		return nil
 	})
+	task.collection = models
 	return models, err
 }
 
 // find to Id
-func (task *Task) Find(Id int) (model database.Modeler, err error) {
+func (task *Task) Find(Id int) (model *Task, err error) {
 
 	err = task.db.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte(tableName))
@@ -85,7 +86,7 @@ func NewTask(db *bolt.DB) (task *Task, err error) {
 
 // --- Collection
 func (task *Task) ToJson() ([]byte, error) {
-	by, err := json.Marshal(task)
+	by, err := json.Marshal(task.collection)
 	if err != nil {
 		log.Println(err)
 	}

@@ -26,8 +26,9 @@ func Go() {
 	server.On(LIST_QUEUES, func() (json string){
 		db,_ := database.Open(DATABASE_NAME)
 		task, _ := models.NewTask(db)
-		str,_ := task.All()
-		return string(str)
+		task.All()
+		bt,_ := task.ToJson()
+		return string(bt)
 	})
 	// kill process
 	server.On(KILL_PS, func(pid int) bool {
