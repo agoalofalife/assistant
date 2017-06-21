@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/agoalofalife/assistant/database"
 	"github.com/boltdb/bolt"
-	"strconv"
 	"log"
+	"strconv"
 )
 
 const tableName = "Task"
@@ -19,6 +19,7 @@ type Task struct {
 	TimeStart      string `json:"timeStart"`
 	db             *bolt.DB
 }
+
 // create task
 func (task *Task) CreateTask() error {
 	return task.db.Update(func(tx *bolt.Tx) error {
@@ -69,14 +70,7 @@ func (task *Task) Find(Id int) (model database.Modeler, err error) {
 	return model, err
 }
 
-func (task *Task) ToJson() ([]byte, error) {
-	by, err := json.Marshal(task)
-	if err != nil {
-		log.Println(err)
-	}
-	return by, err
-}
-
+// --- Constructor
 func NewTask(db *bolt.DB) (task *Task, err error) {
 	err = db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucket([]byte(tableName))
@@ -87,4 +81,13 @@ func NewTask(db *bolt.DB) (task *Task, err error) {
 	})
 	task = &Task{db: db}
 	return task, err
+}
+
+// --- Collection
+func (task *Task) ToJson() ([]byte, error) {
+	by, err := json.Marshal(task)
+	if err != nil {
+		log.Println(err)
+	}
+	return by, err
 }
