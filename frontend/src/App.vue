@@ -8,6 +8,7 @@
         <el-submenu index="1">
           <template slot="title"><i class="el-icon-close" @click="changeStateMenu"></i>General</template>
           <el-menu-item index="process">Process</el-menu-item>
+          <el-menu-item index="task">Task</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>
