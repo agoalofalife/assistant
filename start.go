@@ -6,8 +6,13 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"github.com/agoalofalife/assistant/database"
+	"github.com/agoalofalife/assistant/database/models"
 )
 
+const  (
+	DATABASE_NAME = "Assistant.db"
+)
 func Go() {
 	server, err := socketio.NewServer(nil)
 	if err != nil {
@@ -17,6 +22,13 @@ func Go() {
 	//ps := New()
 	//ps.allPs()
 
+	// list queues
+	server.On(LIST_QUEUES, func() (json string){
+		db,_ := database.Open(DATABASE_NAME)
+		task, _ := models.NewTask(db)
+		str,_ := task.All()
+		return string(str)
+	})
 	// kill process
 	server.On(KILL_PS, func(pid int) bool {
 		process, _ := os.FindProcess(pid)
