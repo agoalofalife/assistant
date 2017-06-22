@@ -90,9 +90,27 @@
                 this.form.timeOut   = ''
                 this.buttonModal    = true
                 this.modalEdit      = true
+
                 switch (typeAction) {
                     case 'save' :
+                        console.log( 'save emit' );
+//                        this.$socket.emit('create:queue', {
+//                            name    :  this.form.name,
+//                            console :  this.form.console,
+//                            timeStart :  this.form.timeStart,
+//                            timeOut :  this.form.timeOut,
+//                        }, function () {
+//                            console.log('push new task')
+//                        })
+                        this.$socket.emit('create:queue', 2, function(data){
+                            console.log('ACK from server wtih data: ', data)
+                        })
+//                        this.$socket.emit('create:queue', 23, function () {
+//                            console.log('push new task')
+//                        })
+                        break
                     case 'update':
+                        console.log( 'update task' );
                 }
             },
             openEdit(row){

@@ -6,4 +6,5 @@ const (
 	ERROR   = "error"
 	// Queues processes
 	LIST_QUEUES = "list:queues"
+	CREATE_QUEUE = "create:queue"
 )

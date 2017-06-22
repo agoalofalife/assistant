@@ -21,7 +21,11 @@ func Go() {
 
 	//ps := New()
 	//ps.allPs()
-
+	// create new task
+	server.On(CREATE_QUEUE, func(json string) bool{
+		log.Println("json create task", json)
+		return true
+	})
 	// list queues
 	server.On(LIST_QUEUES, func() (json string){
 		db,_ := database.Open(DATABASE_NAME)
@@ -53,6 +57,7 @@ func Go() {
 	server.On(ERROR, func(so socketio.Socket, err error) {
 		log.Println("error:", err)
 	})
+
 
 	http.Handle("/socket.io/", server)
 	http.Handle("/", http.FileServer(http.Dir("./asset")))
