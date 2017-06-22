@@ -1,8 +1,9 @@
 <template>
     <div>
-        <el-button @click="createTask" type="primary" icon="plus">Create</el-button>
     <el-col :span="16" :offset="3" >
-
+        <el-col :span="2" class="create-button">
+            <el-button @click="createTask" type="primary" icon="plus">Create</el-button>
+        </el-col>
     <el-table :data="tasks" border style="width: 100%">
         <el-table-column
                 prop="id"
@@ -113,3 +114,8 @@
         }
     }
 </script>
+<style scoped>
+    .create-button{
+        margin: 1% 0;
+    }
+</style>
