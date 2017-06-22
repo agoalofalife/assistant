@@ -1,6 +1,8 @@
 <template>
     <div>
+        <el-button @click="createTask" type="primary" icon="plus">Create</el-button>
     <el-col :span="16" :offset="3" >
+
     <el-table :data="tasks" border style="width: 100%">
         <el-table-column
                 prop="id"
@@ -54,7 +56,7 @@
         </el-form>
         <span slot="footer" class="dialog-footer">
     <el-button @click="modalEdit = false">Cancel</el-button>
-    <el-button type="primary" @click="modalEdit = false">Save</el-button>
+    <el-button type="primary" @click="createTask((buttonModal ? 'save' : 'update'))">{{ buttonModal ? 'save' : 'update'}}</el-button>
     </span>
     </el-dialog>
     </div>
@@ -69,6 +71,7 @@
             return{
                 tasks:[],
                 modalEdit:false,
+                buttonModal:true,
                 form: {
                     name: '',
                     console:'',
@@ -79,12 +82,25 @@
             }
         },
         methods : {
+            createTask(typeAction){
+                this.form.name      = ''
+                this.form.console   = ''
+                this.form.timeStart = ''
+                this.form.timeOut   = ''
+                this.buttonModal    = true
+                this.modalEdit      = true
+                switch (typeAction) {
+                    case 'save' :
+                    case 'update':
+                }
+            },
             openEdit(row){
                 this.form.name      = row.name
                 this.form.console   = row.commandConsole
                 this.form.timeStart = row.timeStart
                 this.form.timeOut   = row.timeOut
 
+               this.buttonModal    = false
                this.modalEdit = true
             }
         },
