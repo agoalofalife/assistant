@@ -38,7 +38,7 @@
         </el-table-column>
     </el-table>
     </el-col>
-    <el-dialog  title="Edit Task" :visible.sync="modalEdit">
+    <el-dialog  :title=" buttonModal ? 'Create Task' : 'Edit Task'" :visible.sync="modalEdit">
         <el-form :model="form">
             <el-form-item label="Name" :label-width="formLabelWidth">
                 <el-input v-model="form.name" auto-complete="off"></el-input>
