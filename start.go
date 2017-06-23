@@ -22,18 +22,24 @@ func Go() {
 	//ps := New()
 	//ps.allPs()
 	// create new task
-	server.On(CREATE_QUEUE, func(json string) bool{
-		log.Println("json create task", json)
-		return true
-	})
+
 	// list queues
 	server.On(LIST_QUEUES, func() (json string){
 		db,_ := database.Open(DATABASE_NAME)
+		defer db.Close()
 		task, _ := models.NewTask(db)
 		task.All()
 		bt,_ := task.ToJson()
 		return string(bt)
 	})
+
+
+	server.On(CREATE_QUEUES, func(s int) bool {
+		log.Println("How are you???????")
+		log.Println("json create task", s)
+		return true
+	})
+
 	// kill process
 	server.On(KILL_PS, func(pid int) bool {
 		process, _ := os.FindProcess(pid)

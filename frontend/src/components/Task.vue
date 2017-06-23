@@ -129,6 +129,9 @@
 
                 this.tasks = JSON.parse(data)
             }.bind(this))
+
+
+            console.log(this.$socket.emit('creator:queues', 2));
         }
     }
 </script>
