@@ -124,14 +124,10 @@
             }
         },
         mounted(){
-            this.$socket.emit('list:queues', function(data){
+             this.$socket.emit('list:queues', function(data){
                 console.log('list task: ', JSON.parse(data))
-
                 this.tasks = JSON.parse(data)
             }.bind(this))
-
-
-            console.log(this.$socket.emit('creator:queues', 2));
         }
     }
 </script>

@@ -21,24 +21,6 @@ func Go() {
 
 	//ps := New()
 	//ps.allPs()
-	// create new task
-
-	// list queues
-	server.On(LIST_QUEUES, func() (json string){
-		db,_ := database.Open(DATABASE_NAME)
-		defer db.Close()
-		task, _ := models.NewTask(db)
-		task.All()
-		bt,_ := task.ToJson()
-		return string(bt)
-	})
-
-
-	server.On(CREATE_QUEUES, func(s int) bool {
-		log.Println("How are you???????")
-		log.Println("json create task", s)
-		return true
-	})
 
 	// kill process
 	server.On(KILL_PS, func(pid int) bool {
@@ -58,7 +40,21 @@ func Go() {
 			}
 
 		}()
+		// create new task
+		server.On(CREATE_QUEUES, func() bool {
+			log.Println("How are you???????")
+			return true
+		})
 
+		// list queues
+		server.On(LIST_QUEUES, func() (json string){
+			db,_ := database.Open(DATABASE_NAME)
+			defer db.Close()
+			task, _ := models.NewTask(db)
+			task.All()
+			bt,_ := task.ToJson()
+			return string(bt)
+		})
 	})
 	server.On(ERROR, func(so socketio.Socket, err error) {
 		log.Println("error:", err)

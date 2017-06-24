@@ -7,5 +7,4 @@ const (
 	// Queues processes
 	LIST_QUEUES = "list:queues"
 	CREATE_QUEUES = "creator:queues"
-
 )
