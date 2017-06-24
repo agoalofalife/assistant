@@ -22,17 +22,7 @@ func Go() {
 
 	//ps := New()
 	//ps.allPs()
-	// create new task
-	server.On(CREATE_QUEUES, func(strJson []byte) bool {
-		db,_ := database.Open(DATABASE_NAME)
-		defer db.Close()
-		task, _ := models.NewTask(db)
-		json.Unmarshal(strJson, task)
 
-		log.Println("unmarshal : ", task.Name)
-
-		return true
-	})
 
 	// list queues
 	server.On(LIST_QUEUES, func() (json string){
@@ -64,7 +54,17 @@ func Go() {
 			return true
 		})
 
+		// create new task
+		server.On(CREATE_QUEUES, func(strJson []byte) bool {
+			db,_ := database.Open(DATABASE_NAME)
+			defer db.Close()
+			task, _ := models.NewTask(db)
+			json.Unmarshal(strJson, task)
 
+			log.Println("unmarshal : ", task.Name)
+
+			return true
+		})
 	})
 	server.On(ERROR, func(so socketio.Socket, err error) {
 		log.Println("error:", err)

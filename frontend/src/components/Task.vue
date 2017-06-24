@@ -119,14 +119,15 @@
             }
         },
         mounted(){
-            this.$socket.emit('list:queues', function(data){
-                this.tasks = JSON.parse(data)
-            }.bind(this))
+
         },
         socket: {
             events: {
                 connect() {
                     console.info("Websocket connected to " + this.$socket.nsp);
+//                    this.$socket.emit('list:queues', function(data){
+//                        this.tasks = JSON.parse(data)
+//                    }.bind(this))
                 },
                 disconnect() {
                     console.log("Websocket disconnected from " + this.$socket.nsp);
