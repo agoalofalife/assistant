@@ -45,7 +45,7 @@ func (task *Task) All() (models []*Task, err error) {
 		c := b.Cursor()
 
 		for key, value := c.First(); key != nil; key, value = c.Next() {
-			fmt.Printf("key=%s, value=%s\n", key, value)
+			//fmt.Printf("key=%s, value=%s\n", key, value)
 			task := new(Task)
 			json.Unmarshal(value, task)
 			models = append(models, task)

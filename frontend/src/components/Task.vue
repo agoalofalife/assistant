@@ -93,21 +93,16 @@
 
                 switch (typeAction) {
                     case 'save' :
-                        console.log( 'save emit' );
-//                        this.$socket.emit('create:queue', {
-//                            name    :  this.form.name,
-//                            console :  this.form.console,
-//                            timeStart :  this.form.timeStart,
-//                            timeOut :  this.form.timeOut,
-//                        }, function () {
-//                            console.log('push new task')
-//                        })
-                        this.$socket.emit('create:queue', 2, function(data){
-                            console.log('ACK from server wtih data: ', data)
+                        console.log( 'save!' );
+                        this.$socket.emit('create:queue', JSON.stringify({
+                            name    :  this.form.name,
+                            commandConsole :  this.form.console,
+                            timeStart :  this.form.timeStart,
+                            timeOut :  this.form.timeOut,
+                        }), function () {
+                            console.log('push new task')
                         })
-//                        this.$socket.emit('create:queue', 23, function () {
-//                            console.log('push new task')
-//                        })
+
                         break
                     case 'update':
                         console.log( 'update task' );
@@ -124,10 +119,22 @@
             }
         },
         mounted(){
-             this.$socket.emit('list:queues', function(data){
-                console.log('list task: ', JSON.parse(data))
+            this.$socket.emit('list:queues', function(data){
                 this.tasks = JSON.parse(data)
             }.bind(this))
+        },
+        socket: {
+            events: {
+                connect() {
+                    console.info("Websocket connected to " + this.$socket.nsp);
+                },
+                disconnect() {
+                    console.log("Websocket disconnected from " + this.$socket.nsp);
+                },
+                error(err) {
+                    console.error("Websocket error!", err);
+                }
+            }
         }
     }
 </script>
