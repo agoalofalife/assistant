@@ -5,10 +5,10 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 	"github.com/agoalofalife/assistant/database"
 	"github.com/agoalofalife/assistant/database/models"
 	"encoding/json"
+	"time"
 )
 
 const  (
@@ -23,13 +23,14 @@ func Go() {
 	//ps := New()
 	//ps.allPs()
 	// create new task
-	server.On(CREATE_QUEUES, func(strJson string) bool {
+	server.On(CREATE_QUEUES, func(strJson []byte) bool {
 		db,_ := database.Open(DATABASE_NAME)
 		defer db.Close()
 		task, _ := models.NewTask(db)
-		json.Unmarshal([]byte(strJson), &task)
+		json.Unmarshal(strJson, task)
 
-		log.Println("How are you???????", task)
+		log.Println("unmarshal : ", task.Name)
+
 		return true
 	})
 
@@ -45,6 +46,7 @@ func Go() {
 
 	server.On(CONNECT, func(so socketio.Socket) {
 		log.Println("on connection")
+
 		go func() {
 			for {
 				ps := New()
