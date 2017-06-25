@@ -105,6 +105,14 @@
 
                         break
                     case 'update':
+                        this.$socket.emit('update:queue', JSON.stringify({
+                            name    :  this.form.name,
+                            commandConsole :  this.form.console,
+                            timeStart :  this.form.timeStart,
+                            timeOut :  this.form.timeOut,
+                        }), function () {
+                            console.log('push update task')
+                        })
                         console.log( 'update task' );
                 }
             },
@@ -118,16 +126,13 @@
                this.modalEdit = true
             }
         },
-        mounted(){
-
-        },
         socket: {
             events: {
                 connect() {
                     console.info("Websocket connected to " + this.$socket.nsp);
-//                    this.$socket.emit('list:queues', function(data){
-//                        this.tasks = JSON.parse(data)
-//                    }.bind(this))
+                    this.$socket.emit('list:queues', function(data){
+                        this.tasks = JSON.parse(data)
+                    }.bind(this))
                 },
                 disconnect() {
                     console.log("Websocket disconnected from " + this.$socket.nsp);

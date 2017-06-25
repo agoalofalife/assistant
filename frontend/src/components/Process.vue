@@ -172,7 +172,7 @@ export default {
 
             this.processes.forEach((el) => {
                 if (!result.includes(el.USER)) {
-                    result.push( el.USER)
+                    result.push(el.USER)
                     resultCompare.push({ text: el.USER, value: el.USER })
                 }
             });

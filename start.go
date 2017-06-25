@@ -7,7 +7,6 @@ import (
 	"os"
 	"github.com/agoalofalife/assistant/database"
 	"github.com/agoalofalife/assistant/database/models"
-	"encoding/json"
 	"time"
 )
 
@@ -20,9 +19,12 @@ func Go() {
 		log.Fatal(err)
 	}
 
-	//ps := New()
-	//ps.allPs()
-
+	// kill process
+	server.On(KILL_PS, func(pid int) bool {
+		process, _ := os.FindProcess(pid)
+		process.Kill()
+		return true
+	})
 
 	// list queues
 	server.On(LIST_QUEUES, func() (json string){
@@ -34,6 +36,22 @@ func Go() {
 		return string(bt)
 	})
 
+	// create new task
+	server.On(CREATE_QUEUES, func(strJson []byte) bool {
+		log.Println("event server ")
+		//db,_ := database.Open(DATABASE_NAME)
+		//defer db.Close()
+		//task, _ := models.NewTask(db)
+		//json.Unmarshal(strJson, task)
+		//
+		//log.Println("unmarshal : ", task.Name
+		return true
+	})
+
+	server.On(UPDATE_QUEUE, func(strJson []byte) bool {
+		log.Println("event server : update")
+		return true
+	})
 	server.On(CONNECT, func(so socketio.Socket) {
 		log.Println("on connection")
 
@@ -47,24 +65,6 @@ func Go() {
 
 		}()
 
-		// kill process
-		server.On(KILL_PS, func(pid int) bool {
-			process, _ := os.FindProcess(pid)
-			process.Kill()
-			return true
-		})
-
-		// create new task
-		server.On(CREATE_QUEUES, func(strJson []byte) bool {
-			db,_ := database.Open(DATABASE_NAME)
-			defer db.Close()
-			task, _ := models.NewTask(db)
-			json.Unmarshal(strJson, task)
-
-			log.Println("unmarshal : ", task.Name)
-
-			return true
-		})
 	})
 	server.On(ERROR, func(so socketio.Socket, err error) {
 		log.Println("error:", err)
