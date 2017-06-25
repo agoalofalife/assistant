@@ -10,6 +10,14 @@
 
 - kill process
 
+
+
+```
+At the moment there is no interest to develop this project so it was like as entertainment
+```
+
+
+
  ![](http://g.recordit.co/0P6DZ6YVRp.gif)
  ![](http://g.recordit.co/qVjda9vMjs.gif)
  
